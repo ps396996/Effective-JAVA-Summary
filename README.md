@@ -389,6 +389,28 @@ isBabyBoomer creates a new Calendar,TimeZone and two Date instances each time is
 	}
 ```
 
+Some objects creation are much more expensive than others. You should avoid creating this object each time. You can cache or store it in the somewhere for reuse.
+
+```java
+    // Performance can be greatly improved!
+    static boolean isRomanNumeral(String s) {
+        return s.matches("^(?=.)M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$");
+    }
+```
+
+```java
+// Reusing expensive object for improved performance
+    public class RomanNumerals {
+        private static final Pattern ROMAN = Pattern.compile("^(?=.)M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$");
+        
+static boolean isRomanNumeral(String s) {
+            return ROMAN.matcher(s).matches();
+        }
+    }
+```
+The improved version of isRomanNumeral provides significant performance gains if it invoked frequently.
+
+ 
 **_Prefer primitives to boxed primitives, and watch out for unintentional autoboxing_**
 
 ```java
