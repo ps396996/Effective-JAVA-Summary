@@ -301,7 +301,9 @@ In the below implementation if you will require different languages Lexicon then
     }
 ```
 
-With dependency injection, you could attach varied Lexicon to SpellChecker and allows the client to decide Lexicon in the runtime. 
+With dependency injection, you will be able to attach varied Lexicon to SpellChecker and allows the client to decide Lexicon in the runtime. 
+
+**Do not use** singleton or static resource it will make you depend on a single resource. Use a constructor to reference dependency to the class.
 
 ```java
     // Dependency injection provides flexibility and testability
