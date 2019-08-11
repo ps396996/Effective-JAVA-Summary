@@ -510,7 +510,9 @@ Uncaught exceptions inside a finalizer won't even print a warning.
 
 There is a severe performance penalty for using finalizers.
 
-**_Possible Solution_**
+### Possible Solutions
+
+**_Try- Finally_**
 
 Provide an _explicit termination method_ like the _close_ on  _InputStream_, _OutputStream_, _java.sql.Connection_...
 
@@ -532,6 +534,89 @@ Explicit termination methods are typically used in combination with the _try-fin
 * Use in native peers. Garbage collector doesn't know about this objects.
 
 In this cases always remember to invoke super.finalize.
+
+
+**_Cleaners with try-with-resources_**
+
+Below is a simple Room.class demonstrating facility. Let's assumed that a room must be cleaned before reclaimed. 
+The Room class implemented AutoCloseable to make class eligible to close. Unlike finalizer, the cleaner does not pollute the class's API.
+
+The State class in the Room class has been declared for storing class state before destruction.
+
+```java
+public class Room implements AutoCloseable {
+  private static final Logger logger = LoggerFactory.getLogger(Room.class);
+  private static final Cleaner cleaner = Cleaner.create();
+
+  // Resource that requires cleaning. Must not refer to Room!
+  private static class State implements Runnable {
+
+    int numJunkPiles; // Number of junk piles in this room
+    
+    State(int numJunkPiles) {
+      this.numJunkPiles = numJunkPiles;
+    }
+
+    // Invoked by close method or cleaner
+    @Override
+    public void run() {
+      logger.info("Cleaning room");
+      numJunkPiles = 0;
+    }
+  }
+
+  // The state of this room, shared with our cleanable
+  private final State state;
+
+  // Our cleanable. Cleans the room when it’s eligible for gc
+  private final Cleaner.Cleanable cleanable;
+
+  public Room(int numJunkPiles) {
+    state = new State(numJunkPiles);
+    cleanable = cleaner.register(this, state);
+  }
+
+  @Override
+  public void close() throws Exception {
+    cleanable.clean();
+  }
+}
+```
+
+Room’s cleaner is used only as a safety net. If clients surround all Room instantiations in try-with-resources blocks, automatic cleaning will never be required. 
+This well-behaved client demonstrates that behavior:
+```java
+public class Adult {
+
+  private static final Logger logger = LoggerFactory.getLogger(Adult.class);
+
+  public static void main(String[] args) {
+    try (Room room = new Room(7)) {
+      logger.info("Goodbye!!!");
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e.getCause());
+    } finally {
+      logger.info("Finally!!!");
+    }
+  }
+}
+```
+
+But what about this ill-behaved program, which never cleans its room?
+You might expect that class will print out "Cleaning room" after printing "Peace out!!!"
+But it will print only "Peace out!!!". Only with the help of System.gc() you can print "Cleaning room'. But it doesn't guaranty that it will be printed out like that every time.
+
+```java
+public class Teenager {
+
+  private static final Logger logger = LoggerFactory.getLogger(Teenager.class);
+
+  public static void main(String[] args) {
+    new Room(9);   
+    logger.info("Peace out!!!");
+  }
+}
+```
 
 # 3. METHODS COMMON TO ALL OBJECTS
 ## 8. Obey the general contract when overriding *equals*
