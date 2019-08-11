@@ -1024,9 +1024,9 @@ Any other use, like the _constant interface_ should be avoided.
 
 	// Constant interface antipattern
 	public interface PhysicalConstants {
-		static final double AVOGRADOS_NUMBER = 6.02214199e23;
-		static final double BOLTZAN_CONSTANT = 1.3806503e-23;
-		static final double ELECTRON_MASS = 9.10938188e-31;
+		double AVOGRADOS_NUMBER = 6.02214199e23;
+		double BOLTZAN_CONSTANT = 1.3806503e-23;
+		double ELECTRON_MASS = 9.10938188e-31;
 	}
 ```
 
@@ -1071,7 +1071,7 @@ They have lot of boilerplate, bad readability, they increase memory footprint, a
 
 	// Tagged Class
 	class Figure{
-		enum Shaple {RECTANGLE, CIRCLE};
+		enum Shaple {RECTANGLE, CIRCLE}
 
 		final Shape shape;
 
@@ -1171,7 +1171,7 @@ To be able to pass different strategies, clients should invoke methods from an _
 ```java
 
 	public interface Comparator<T>{
-		public int compare(T t1, T t2);
+		int compare(T t1, T t2);
 	}
 ```
 
@@ -1459,13 +1459,13 @@ To avoid ic create a _generic static factory method_
 	}
 
 	// Generic singleton factory pattern
-	private static UnaryFunction<Object> IDENTITY_FUNCTION = new UnaryFunction<Object>(){
+	private UnaryFunction<Object> IDENTITY_FUNCTION = new UnaryFunction<Object>(){
 		public Object apply(Object arg) {return arg;}
 	};
 
 	//IDENTITY_FUNCTION is stateless and its type parameter is unbounded so it's safe to share one instance across all types.
 	@SuppressWarnings("unchecked")
-	public static<T> UnaryFunction<T> identityFunction(){
+	static<T> UnaryFunction<T> identityFunction(){
 		return(UnaryFunction<T>) IDENTITY_FUNCTION;
 	}
 ```
@@ -1675,7 +1675,7 @@ Use it, if multiple enum constants share common behaviors.
 			};
 			WEEKEND{
 				double overtimePay(double hours, double payRate) { return ...}
-			};
+			}
 			private static final int HOURS_PER_SHIFT = 8;
 
 			abstract double overtimePay(double hours, double payRate);
@@ -1693,7 +1693,7 @@ Never derive a value of an enum to its ordinal
 ```java
 
 	public enum Ensemble{
-		SOLO, DUET, TRIO...;
+		SOLO, DUET, TRIO...
 		public int numberOfMusicians() {return ordinal() + 1}
 	}
 ```
@@ -1883,8 +1883,8 @@ Use the _Override_ annotation on every method declaration that you believe to ov
 ```java
 
 	public class Bigram {
-		private final class first;
-		private final class second;
+		private final class first
+		private final class second
 		public Bigram(char first, char second){
 			this.first = first;
 			this.second = second;
