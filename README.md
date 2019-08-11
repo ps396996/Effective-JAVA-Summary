@@ -11,6 +11,7 @@ _If you are the publisher and think this repository should not be public, just w
 	- [2. Use BUILDERS when faced with many constructors](#2-use-builders-when-faced-with-many-constructors)
 	- [3. Enforce the singleton property with a private constructor or an enum type](#3-enforce-the-singleton-property-with-a-private-constructor-or-an-enum-type)
 	- [4. Enforce noninstantiability with a private constructor](#4-enforce-noninstantiability-with-a-private-constructor)
+	- [5. Prefer Dependency Injection to hardwiring resource](#5-prefer-dependency-injection-to-hardwiring-resources)
 	- [5. Avoid creating objects](#5-avoid-creating-objects)
 	- [6. Eliminate obsolete object references](#6-eliminate-obsolete-object-references)
 	- [7. Avoid finalizers](#7-avoid-finalizers)
@@ -270,6 +271,50 @@ Used for example to:
 		}
 		...
 	}
+```
+## 5. Prefer dependency injection to hardwiring resources
+
+Many classes depend on one or multiple resources. For example, below 2 examples shows this dependency but the implementation of this dependency aren't flexible.
+In the below implementation if you will require different languages Lexicon then you should create a new SpellChecker.    
+
+```java
+    // Inappropriate use of static utility - inflexible & untestable!
+    public class SpellChecker {
+        private static final Lexicon dictionary = ...
+        
+        private SpellChecker() {} // Noninstantiable
+        public static boolean isValid(String word) { ... }
+        public static List<String> suggestions(String typo) { ... }
+    } 
+```
+
+```java
+    // Inappropriate use of singleton - inflexible & untestable!
+    public class SpellChecker {
+        private final Lexicon dictionary = ...
+        
+        private SpellChecker(...) {}
+        public static INSTANCE = new SpellChecker(...);
+        
+        public boolean isValid(String word) { ... }
+        public List<String> suggestions(String typo) { ... }
+    }
+```
+
+With dependency injection, you could attach varied Lexicon to SpellChecker and allows the client to decide Lexicon in the runtime. 
+
+```java
+    // Dependency injection provides flexibility and testability
+    public class SpellChecker {
+        private final Lexicon dictionary;
+        
+        public SpellChecker(Lexicon dictionary) {
+            this.dictionary = Objects.requireNonNull(dictionary);
+        }
+        
+        public boolean isValid(String word) { ... }
+        public List<String> suggestions(String typo) { ... }
+    }
 ```
 
 ## 5. Avoid creating objects
