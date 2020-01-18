@@ -512,7 +512,7 @@ There is a severe performance penalty for using finalizers.
 
 ### Possible Solutions
 
-**_Try- Finally_**
+**_try-with-finally_**
 
 Provide an _explicit termination method_ like the _close_ on  _InputStream_, _OutputStream_, _java.sql.Connection_...
 
@@ -617,6 +617,10 @@ public class Teenager {
   }
 }
 ```
+
+## 9. Prefer try-with-resources to try-finally
+
+
 
 # 3. METHODS COMMON TO ALL OBJECTS
 ## 8. Obey the general contract when overriding *equals*
