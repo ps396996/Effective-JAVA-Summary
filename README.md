@@ -620,10 +620,105 @@ public class Teenager {
 
 ## 9. Prefer try-with-resources to try-finally
 
+Historically, try-finally statement was the best way to guarantee that a resource would be closed. Even in the face of an exception or return.
+
+
+```java
+// try-finally - No longer the best way to close resources!
+public static class DummyClass {
+    static String firstLineOfFile(String path) throws IOException {
+      BufferedReader br = new BufferedReader(new FileReader(path));
+      try {
+        return br.readLine();
+      } finally {
+        br.close();
+      }
+    }
+  }
+``` 
+
+
+```java
+// try-finally is ugly when used with more than one resource!
+public static class DummyClass {
+ static void copy(String src, String dst) throws IOException {
+   InputStream in = new FileInputStream(src);
+   try {
+     OutputStream out = new FileOutputStream(dst);
+     try {
+       byte[] buf = new byte[BUFFER_SIZE];
+       int n;
+       while ((n = in.read(buf)) >= 0) {
+         out.write(buf, 0, n);
+       }
+     } finally {
+       out.close();
+     }
+   } finally {
+     in.close();
+   }
+ }
+}
+```
+
+Even the correct code for closing resource in try-finally block has defect. Code's try and finally blocks is capable to throw exception. 
+This problem is solved by Java 7 on behalf of try-with-resource.
+Here's how our first example looks using try-with-resource
+
+```java
+// try-finally - No longer the best way to close resources!
+public static class DummyClass {
+    static String firstLineOfFile(String path) throws IOException {   
+      try(BufferedReader br = new BufferedReader(new FileReader(path))) {
+        return br.readLine();
+      }
+    }
+  }
+```
+
+Here's how our second example looks using try-with-resource 
+
+```java
+// try-finally is ugly when used with more than one resource!
+public static class DummyClass {
+ static void copy(String src, String dst) throws IOException {  
+   try(InputStream in = new FileInputStream(src);
+       OutputStream out = new FileOutputStream(dst)) {
+     byte[] buf = new byte[BUFFER_SIZE];
+     int n;
+     while ((n = in.read(buf)) >= 0) {
+       out.write(buf, 0, n);
+     }
+   }
+ }
+}
+```
+
+Not only try-resource is shorter and readable than try-finally block; it also makes easy to diagnose our code. 
+It doesn't allow to try and close throw separate exceptions.
+
+
+You can use catch clause to detect and take your action in case of excetions.
+ 
+ ```java
+ import java.io.IOException;// try-finally - No longer the best way to close resources!
+ public static class DummyClass {
+     static String firstLineOfFile(String path, String defaultValue) throws IOException {   
+       try(BufferedReader br = new BufferedReader(new FileReader(path))) {
+         return br.readLine();
+       } catch (IOException e) {
+         return defaultValue;
+       }
+     }
+   }
+ ```
+
+The lesson is clear: Always user try-with-resource in preference to try-finally when working with resource which must ve closed. 
+The resulting code is shorter and clear, the exceptions that it generates much more useful. 
 
 
 # 3. METHODS COMMON TO ALL OBJECTS
-## 8. Obey the general contract when overriding *equals*
+## 10. Obey the general contract when overriding *equals*
 
 **_Don't override if:_**
 
@@ -677,7 +772,7 @@ A class has a notion of _logical equality_ that differs from mere object identit
 * Don't substitute another type for _Object_ in the _equals_ declaration
 
 
-## 9. Always override _hashCode_ when you override *equals*
+## 11. Always override _hashCode_ when you override *equals*
 
 **_Contract of hashCode_**
 
@@ -719,7 +814,7 @@ The second condition is the one that is more often violated.
 		return result;
 	}
 ```
-## 10. Always override _toString_
+## 12. Always override _toString_
 
 Providing a good _toString_ implementation makes your class much more pleasant to read.
 
@@ -729,7 +824,7 @@ It is possible to specify the format of return value in the documentation.
 
 Always provide programmatic access to all of the information contained in the value returned by _toString_ so the users of the object don't need to parse the output of the _toString_
 
-## 11. Override _clone_ judiciously
+## 13. Override _clone_ judiciously
 Cloneable interface does not contain methods
 If a class implements Cloneable, Object's clone method returns a field-by-field copy of the object.
 Otherwise it throws CloneNotSupportedException.
@@ -817,7 +912,7 @@ These alternatives:
 
 Furthermore they can use its Interface-based copy constructors and factories, _conversion constructors_ and _conversion factories_ and allow clients to choose the implementation type `public HashSet(Set set) -> TreeSet;`
 
-## 12. Consider implementing _Comparable_
+## 14. Consider implementing _Comparable_
 _Comparable_ is an interface. It is not declared in _Object_
 
 Sorting an array of objects that implement _Comparable_ is as simple as `Arrays.sort(a);`
@@ -838,7 +933,7 @@ For floating-point fields use _Float.compare_ or _Double.compare_
 For arrays start with the most significant field and work your way down.
 
 # 4. CLASSES AND INTERFACES
-## 13. Minimize the accesibility of classes and members
+## 15. Minimize the accesibility of classes and members
 
 __Encapsulation__:
 
@@ -853,11 +948,11 @@ __Encapsulation__:
 
 __Make each class or member as inaccesible as possible__
 
-If a package-private top level class is used  by only one class make it a  private nested class of the class that uses it. ([Item 22](#22-favor-static-member-classes-over-nonstatic))
+If a package-private top level class is used  by only one class make it a  private nested class of the class that uses it. ([Item 24](#22-favor-static-member-classes-over-nonstatic))
 
 Is is acceptable to make a private member of a public class package-private in order to test it.
 
-__Instance fields should never be public__ ([Item 14](#14-in-public-classes-use-accessor-methods-not-public-fields)) Class will not be thread-safe.
+__Instance fields should never be public__ ([Item 16](#16-in-public-classes-use-accessor-methods-not-public-fields)) Class will not be thread-safe.
 
 Static fields can be public if contain primitive values or references to immutable objects. A final field containing a reference to a mutable object has all the disadvantages of a non final field.
 
@@ -887,7 +982,7 @@ Or:
 	}
 ```
 
-## 14. In public classes, use accessor methods, not public fields
+## 16. In public classes, use accessor methods, not public fields
 
 Degenerate classes should not be public
 
@@ -899,7 +994,7 @@ Degenerate classes should not be public
 	}
 ```
 
-* The don't benefit from _encapsulation_ ([Item 13](#13-minimize-the-accesibility-of-classes-and-members))
+* The don't benefit from _encapsulation_ ([Item 15](#15-minimize-the-accesibility-of-classes-and-members))
 
 * Can't change representation without changing the API.
 
@@ -936,7 +1031,7 @@ In **public classes** it is a questionable option to **expose immutable fields**
 
 
 
-## 15. Minimize Mutability
+## 17. Minimize Mutability
 All the information of the instance is provided when it is created.
 They are easier to design, implement and use. And they are less prone to errors and more secure
 
@@ -1030,11 +1125,11 @@ Classes should be immutable unless there are good reasons to make them mutable.
 
 If a  class can not be immutable, limit its mutability as much as possible.
 
-Make every field final unles there is a good reason not to do it.
+Make every field final unless there is a good reason not to do it.
 
 Some of the rules can be lightened to improve performance (caching, lazy initialization...).
 
-## 16. Favor composition over inheritance
+## 18. Favor composition over inheritance
 Inheritance in this case is when a class extends another (_implementation inheritance_) Not interface inheritance.
 
 **Inheritance violates encapsulation**
@@ -1043,7 +1138,7 @@ Fragility causes
 
 1. A subclass depends on the implementation details of its superclass. If the superclass change the subclass may break.
 
-2. The superclass can aquire new methods in new releases that might not be added in the subclass.
+2. The superclass can acquire new methods in new releases that might not be added in the subclass.
 
 **Composition**
 
@@ -1058,10 +1153,10 @@ Each instance method in the new class (_forwarding class_)invokes the correspond
 	// Wrapper class - uses composition in place of inheritance
 	public class InstrumentedSet<E> extends ForwardingSet<E> {
 		private int addCount = 0;
-		//It extends a class(inheritance),but it is a forwarding class that is actually a compositon of the Set
-		(specifically a forwarding class), not the Set itself.
+		//It extends a class(inheritance),but it is a forwarding class that is actually a composition of the Set
+		//(specifically a forwarding class), not the Set itself.
 		public InstrumentedSet (Set<E> s){
-			super(s)
+			super(s);
 		}
 
 		@Override
@@ -1100,7 +1195,7 @@ Each instance method in the new class (_forwarding class_)invokes the correspond
 
 ```
 
-## 17. Design and document for inheritance or else prohibit it.
+## 19. Design and document for inheritance or else prohibit it.
 
 The class must document it _self-use_ of overridable methods.
 
@@ -1118,11 +1213,11 @@ Prohibit subclassing in classes that are not designed and documented to be safel
 
 * Declare the class final
 * Make all constructors private or package-private and add public static factories in place of the constructors.
-([Item 15](#15-minimize-mutability))
+([Item 17](#17-minimize-mutability))
 
-Consider use [Item 16](#16-favor-composition-over-inheritance) if what you want is to increase the functionality of your class instead of subclassing.
+Consider use [Item 18](#18-favor-composition-over-inheritance) if what you want is to increase the functionality of your class instead of subclassing.
 
-## 18. Prefer interfaces to abstract classes
+## 20. Prefer interfaces to abstract classes
 Java permits only single Inheritance, this restriction on abstract classes severely contrains their use as type functions.
 
 Intefaces is generally the best way to define a type that permits multiple implementations.
