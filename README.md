@@ -1560,17 +1560,17 @@ Never add elements (other than null) into a `Collection<?>`
 
 | **Term**                | **Example**                        |**Item**|
 |-------------------------|------------------------------------|--------|
-| Parametrized type       | `List<String>`                     | 23     |
-| Actual type parameter   | `String`                           | 23     |
-| Generic type            | `List<E>`                          | 23, 26 |
-| Formal type parameter   | `E`                                | 23     |
-| Unbounded wildcard type | `List<?>`                          | 23     |
-| Raw type                | `List`                             | 23     |
-| Bounded type parameter  | `<E extends Number>`               | 26     |
-| Recursive type bound    | `<T extends Comparable<T>>`        | 27     |
-| Bounded wildcard type   | `List<? extends Number>`           | 28     |
-| Generic method          | `static <E> List<E> asList(E[] a)` | 27     |
-| Type token              | `String.class`                     | 29     |
+| Parametrized type       | `List<String>`                     | 26     |
+| Actual type parameter   | `String`                           | 26     |
+| Generic type            | `List<E>`                          | 26, 29 |
+| Formal type parameter   | `E`                                | 26     |
+| Unbounded wildcard type | `List<?>`                          | 26     |
+| Raw type                | `List`                             | 26     |
+| Bounded type parameter  | `<E extends Number>`               | 29     |
+| Recursive type bound    | `<T extends Comparable<T>>`        | 30     |
+| Bounded wildcard type   | `List<? extends Number>`           | 31     |
+| Generic method          | `static <E> List<E> asList(E[] a)` | 30     |
+| Type token              | `String.class`                     | 33     |
 
 ## 27. Eliminate unchecked warnings
 Eliminate every unchecked warning that you can, if you can´t use _Suppress-Warnings_ annotation on the smallest scope possible.
@@ -1581,7 +1581,7 @@ Eliminate every unchecked warning that you can, if you can´t use _Suppress-Warn
 	Set<Lark> exaltation = new HashSet<Lark>(); Good
 ```
 
-## 25. Prefer lists to arrays
+## 28. Prefer lists to arrays
 Arrays are _covariant_: if `Sub` is a subtype of `Super`, `Sub[]` is a subtype of `Super[]`  
 Generics are _invariant_: for any two types `Type1` and `Type2`, `List<Type1>` in neither  sub or super type of `List<Type1>`
 
@@ -1603,8 +1603,8 @@ Therefore it is illegal to create an array of a generic type, a parameterized ty
 
 `new List<E>[]`, `new List<String>`, `new E[]`  will result in _generic array creation_ errors.
 
-## 26. Favor generic types
-Making [Item 6](#6-eliminate-obsole-object-references) to use generics.
+## 29. Favor generic types
+Making [Item 6](#6-eliminate-obsolete-object-references) to use generics.
 ```java
 
 	public class Stack{
@@ -1645,7 +1645,7 @@ There will be one error:
 
 	//Warning: Compiler can not prove the type safe, but we can.
 	// This elements array will contain only E instances from push(E).
-	// This is sifficient to ensure type safety, but the runtime
+	// This is sufficient to ensure type safety, but the runtime
 	//type of the array won't be E[]; it will always be Object[]!
 	@SupressWarnings("unchecked")
 	public Stack(){
@@ -1660,7 +1660,7 @@ There will be one error:
 	...
 	result = elements[--size] // Error: found Object, required E
 ```
-A cast  will generate a warning. Beacuse E is a non-reifiable type, there is no way the compiler can check the cast at runtime.
+A cast  will generate a warning. Because E is a non-reifiable type, there is no way the compiler can check the cast at runtime.
 ```java
 
 	result = (E) elements[--size]
@@ -1675,14 +1675,14 @@ The appropriate suppression of the unchecked warning
 			throw new EmptyStackException();
 
 		// push requires elements to be of type E, so cast is correct.
-		@SupressWarnings("unchecked") E result = elements[--size];
+		@SuppressWarnings("unchecked") E result = elements[--size];
 
 		elements[size] = null;
 		return result;
 	}
 ```
 
-## 27. Favor generic Methods
+## 30. Favor generic Methods
 Generic Method
 ```java
 
@@ -1752,16 +1752,16 @@ To avoid ic create a _generic static factory method_
 		return result;
 	}
 ```
-## 28. Use bounded wildcards to increase API flexibility
 
+## 31. Use bounded wildcards to increase API flexibility
 
-Parameterized types are invariant.([Item 25](#25-prefer-lists-to-arrays)) Ie `List<String>` is not a subtype of `List<Object>`
+Parameterized types are invariant.([Item 28](#28-prefer-lists-to-arrays)) Ie `List<String>` is not a subtype of `List<Object>`
 
 ```java
 
 	public void pushAll(Iterable<E> src){
 		for(E e : src)
-			puhs(e)
+			push(e)
 	}
 
 	// Integer is a subtype of Number
