@@ -1,5 +1,6 @@
 package kata.effective.java.item31;
 
+import java.util.Collection;
 import java.util.EmptyStackException;
 import java.util.Objects;
 
@@ -23,6 +24,16 @@ public class Stack<E> {
     for (E e : src) {
       push(e);
     }
+  }
+
+  public void popAll(Collection<? super E> dst) {
+    while (!isEmpty()) {
+      dst.add(pop());
+    }
+  }
+
+  private boolean isEmpty() {
+    return elements.length == 0;
   }
 
   private void ensureCapacity() {
