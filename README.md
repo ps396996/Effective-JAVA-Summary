@@ -1220,15 +1220,15 @@ Consider use [Item 18](#18-favor-composition-over-inheritance) if what you want 
 ## 20. Prefer interfaces to abstract classes
 Java permits only single Inheritance, this restriction on abstract classes severely contrains their use as type functions.
 
-Intefaces is generally the best way to define a type that permits multiple implementations.
+Interfaces is generally the best way to define a type that permits multiple implementations.
 
 Existing classes can be easily retrofitted to implement a new interface.
 
-Interfaces are ideal for defining mixins (a type that a class can implement in addition to its primary type to declare that it provides some optional bahaviour)
+Interfaces are ideal for defining mixins (a type that a class can implement in addition to its primary type to declare that it provides some optional behaviour)
 
 Interfaces allow the construction of nonhierarchical type frameworks.
 
-Interfaces enable safe, powerful functionality enhancements (Wrapper class. [Item 16](#16-favor-composition-over-inheritance))
+Interfaces enable safe, powerful functionality enhancements (Wrapper class. [Item 18](#18-favor-composition-over-inheritance))
 
 Combine the virtues of interfaces and abstract classes, by providing an abstract **skeletal implementation** class to go with each **nontrivial interface** that you export.
 
@@ -1262,13 +1262,53 @@ Combine the virtues of interfaces and abstract classes, by providing an abstract
 		}
 	}
 ```
-Skeletal implementations are designed for inheritance so follow [Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it) guidelines.
+Skeletal implementations are designed for inheritance so follow [Item 19](#19-design-and-document-for-inheritance-or-else-prohibit-it) guidelines.
 
 _simple implementation_ is like a skeletal implementation in that it implements the simplest possible working implementation.
 
 Cons: It is far easier to evolve an abstract class than an interface. Once an interface is released and widely implemented, it is almost impossible to change.
 
-## 19. Use interfaces only to define types
+
+## 21. Design interface for posterity
+
+Since Java 8, we are able to declare and implement a new type of method in interface. Before Java 8, if you added new method to the existed interface, 
+the implementations of this interfaces resulting in a compile-time error because of lack of implementation. 
+However Java 8 make it possible to declare a new default method without brake existed implementations.
+
+Many new default method added to the core collection interfaces in Java 8, to make it useful by lambdas. 
+Java libraries' default methods are high-quality general purpose implementations.
+
+But it is not possible to write a default method that maintains all invariant of every conceivable implementations.
+For Example, _removeIf_ method of Collection interface fail with the _org.apache.commons.collections4.-collection.SynchronizedCollection_.
+
+Here problem is apache common library SynchronizedCollection class syncronize all methods to make it thread safe. However, 
+java core Collection's interface doesn't know anything about it. 
+If client call removeIf method on behalf of SynchronizedCollection then method may throw ConcurrentModificationException due to missing synchronization.        
+
+```java
+  public interface Collection {
+    // Default method added to the Collection interface in Java 8
+    default boolean removeIf(Predicate<? super E> filter) {
+      Objects.requireNonNull(filter);
+      boolean result = false;
+      for (Iterator<E> it = iterator(); it.hasNext(); ) {
+        if (filter.test(it.next())) {
+          it.remove();
+          result = true;
+        }
+      }
+      return result;
+    }
+  }
+```
+
+So, default method of interface may compile without error or warning but fail at runtime.
+
+Now default method is part of java platform, it is still of the utmost importance to design interface with great care.
+
+Using default methods to add new methods to existing interface should be avoided unless the need is critical
+
+## 22. Use interfaces only to define types
 When a class implements an interface, the interface serves as a _type_ that can be used to refer to instances of the class.
 
 Any other use, like the _constant interface_ should be avoided.
@@ -1283,12 +1323,12 @@ Any other use, like the _constant interface_ should be avoided.
 	}
 ```
 
-Better use an enum type ([Item 31](#31-use-instance-fields-instead-of-ordinals)), or a noninstantiable _utility class_ ([Item 4](#4-enforce-noninstantiablillity-with-a-private-constructor))
+Better use an enum type ([Item 31](#31-use-instance-fields-instead-of-ordinals)), or a noninstantiable _utility class_ ([Item 5](#4-enforce-noninstantiability-with-a-private-constructor))
 
 ```java
 
 	//Constant utility class
-	package com.effectivejava.science
+	package com.effectivejava.science;
 
 	public class PhysicalConstants{
 		private PhysicalConstants(){} // Prevents instantiation
@@ -1315,15 +1355,15 @@ To avoid the need of qualifying use _static import_.
 	}
 ```
 
-## 20. Prefer class hierarchies to tagged classes
+## 23. Prefer class hierarchies to tagged classes
 Tagged classes are verbose, error-prone and inefficient.
 
-They have lot of boilerplate, bad readability, they increase memory footprint, and more shortcommings.
+They have lot of boilerplate, bad readability, they increase memory footprint, and more shortcomings.
 
 ```java
 
 	// Tagged Class
-	class Figure{
+	class Figure {
 		enum Shaple {RECTANGLE, CIRCLE}
 
 		final Shape shape;
@@ -1361,7 +1401,7 @@ They have lot of boilerplate, bad readability, they increase memory footprint, a
 	}
 ```
 
-A tagged class is just a palid imitation of a class hierarchy.
+A tagged class is just a paled imitation of a class hierarchy.
 
 * The code is simple and clear.
 * The specific implementations are in its own class
@@ -1400,79 +1440,7 @@ A tagged class is just a palid imitation of a class hierarchy.
 	}
 ```
 
-## 21. Use function objects to represent strategies
-Strategies are facilities that allow programs to store and transmit the ability to invoke a particular function. Similar to _function pointers_, _delegates_ or _lambda expression_.
-
-It is possible to define a object whose method perform operations on other objects.
-
-**Concrete strategy**
-
-```java
-
-	class StringLengthComparator{
-		public int compare(String s1, String s2){
-			return s1.length() - s2.length();
-		}
-	}
-```
-
-Concrete strategies are typically _stateless_ threfore they should be singletons.
-
-To be able to pass different strategies, clients should invoke methods from an _strategy interface_ instead of from a concrete class.
-
-**Comparator interface.** _Generic_([Item 26](#26-favor-generic-types))
-```java
-
-	public interface Comparator<T>{
-		int compare(T t1, T t2);
-	}
-```
-
-```java
-
-	class StringLengthComparator implements Comparator<String>{
-		private StringLengthComparator(){} // Private constructor
-		public static final StringLengthComparator INSTANCE = new StringLengthComparator(); // Singleton instance
-		public int compare(String s1, String s2){
-			return s1.length() - s2.length();
-		}
-	}
-```
-
-Using **anonymous classes**
-
-```java
-
-	Arrays.sort(stringArray, new Comparator<String>(){
-		public int compare(String s1, String s2){
-			return s1.length() - s2.length();
-		}
-	})
-```
-
-An anonymous class will create a new instance each time the call is executed. Consider a private static final field and reusing it.
-
-Concrete strategy class don't need to be public, because the strategy interface serve as a type.
-A host class can export the a public static field or factory, whose type is the interface and the concrete strategy class is a private nested class.
-
-```java
-
-	// Exporting a concrete strategy
-	class Host{
-		private static class StringLengthComparator implements Comparator<String>, Serializable {
-			public int compare(String s1, String s2){
-				return s1.length() - s2.length();
-			}
-		}
-
-		//Returned comparator is serializable
-		public static final Comparator<String> STRING_LEGTH_COMPARATOR = new StringLengthComparator();
-
-		...
-	}
-```
-
-## 22. Favor static member classes over nonstatic
+## 24. Favor static member classes over nonstatic
 4 types of nested classes.
 
 1. static
@@ -1482,21 +1450,67 @@ A host class can export the a public static field or factory, whose type is the 
 
 **Static**, a member class that does not require access to an enclosing instance must be _static_.  
 
-Storing references cost time, space and can cost not wanted behaviors of the garbage collector([Item 6](#6-eliminate-obsole-object-references))  
+Storing references cost time, space and can cost not wanted behaviors of the garbage collector([Item 6](#6-eliminate-obsolete-object-references))  
 
-Common use of static member class is a public helper in conjuctions with its outer class. A nested class enum _Operation_ in  _Calculator_ class. `Calculator.Operation.PLUS`;
+Common use of static member class is a public helper in conjunctions with its outer class. A nested class enum _Operation_ in  _Calculator_ class. `Calculator.Operation.PLUS`;
 
 **Nonstatic** member class instances are required to have an enclosing instance.
 
-**Anonymous** classes are us to create _function objects_ on the fly. ([Item 21](#21-use-function-objects-to-represent-strategies))
+**Anonymous** classes are us to create _function objects_ on the fly. 
 
 **Local** class from the official docs: Use it if you need to create more than one instance of a class, access its constructor, or introduce a new, named type (because, for example, you need to invoke additional methods later).
 
 Anonymous class, from the official docs: Use it if you need to declare fields or additional methods.
 
+## 25. Limit source files to a single top-level class.
+
+While the Java compiler lets you define multiple top-level class in a single source file, there are no benefits associated with doing so, and there are significant risks.
+
+For Example, If you try to compile below class _javac Main.java Dessert.java_ then compilation will fail in case of filename Utensil.java, and the compiler will tell you that you've multiple defined classes.
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    System.out.println(Utensil.NAME + Dessert.NAME);
+  }
+}
+```
+
+```java
+// Two classes defined in one file. Don't ever do this!
+class Utensil {
+   static final String NAME = "pan";
+}
+
+class Dessert {
+   static final String NAME = "cake";
+}
+```
+
+It is better to declare it as below:
+
+```java
+
+  // Static member classes instead of multiple top-level classes
+  public class Test {
+    public static void main(String[] args) {
+      System.out.println(Utensil.NAME + Dessert.NAME);
+    }
+
+    private static class Utensil {
+      static final String NAME = "pan";
+    }
+
+    private static class Dessert {
+      static final String NAME = "cake";
+    }
+  } 
+```
+
+*NB!* The lesson is clear: Never put multiple top-level classes or interfaces in a single source file.  
 
 # 5. GENERICS
-## 23. Don't use raw types in new code
+## 26. Don't use raw types in new code
 Generic classes and interfaces are the ones who have one or more _type parameter_ as _generic_, i.e. `List<E>`
 
 Each generic type defines a set of _parametrized types_ `List<String>`
@@ -1558,7 +1572,7 @@ Never add elements (other than null) into a `Collection<?>`
 | Generic method          | `static <E> List<E> asList(E[] a)` | 27     |
 | Type token              | `String.class`                     | 29     |
 
-## 24. Eliminate unchecked warnings
+## 27. Eliminate unchecked warnings
 Eliminate every unchecked warning that you can, if you can´t use _Suppress-Warnings_ annotation on the smallest scope possible.
 
 ```java
