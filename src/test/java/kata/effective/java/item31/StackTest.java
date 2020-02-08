@@ -6,12 +6,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 class StackTest {
 
 
-  @Test
   void testStack() {
     Stack<Number> numberStack = new Stack<>();
     Iterable<Integer> integers = Iterables.cycle(1, 4, 5);
@@ -19,7 +17,6 @@ class StackTest {
     numberStack.popAll(Collections.emptyList());
   }
 
-  @Test
   void testUnion() {
     Set<Integer> integers = Sets.newHashSet(1, 2, 3);
     Set<Double> doubles = Sets.newHashSet(1.9, 2.3, 3.4);
@@ -37,7 +34,6 @@ class StackTest {
   }
 
 
-  @Test
   void testMax() {
     List<Integer> integers = List.of(1, 3, 4, 5);
     List<Double> doubles = List.of(1.2, 3.3, 5.6, 6.7);
