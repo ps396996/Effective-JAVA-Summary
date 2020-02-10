@@ -2013,7 +2013,209 @@ When your class implements `java.io.Serializable` interface it becomes Serializa
 * They can be targeted more precisely than marker annotations.
 * It's possible to add more information to an annotation type after it is already in use.
 
-# 7. METHODS
+# 7. Lambdas and Streams
+## 42. Prefer lambdas to anonymous classes
+
+We should avoid to use Anonymous classes as below
+
+```java
+  // By using anonymous class
+  Collections.sort(List.of("asd", "asdd"), new Comparator<String>() {
+      @Override
+      public int compare(String o1, String o2) {
+        return Integer.compare(o1.length(), o2.length());
+      }
+    });
+``` 
+
+```java
+  // By using stream
+  Collections.sort(List.of("asd", "asdd"), (o1, o2) -> Integer.compare(o1.length(), o2.length()));
+```
+
+Enum type with constant-specific class bodies & data [**(Example)**](src/main/java/kata/effective/java/item34/Operation.java)
+Could be replaced by Enum with function object fields & constant-specific behavior [**(Example)**](src/main/java/kata/effective/java/item42/Operation.java)
+
+Unlike methods and classes, lambdas lack names and documentation; If a computation isn't self-explanatory, or exceeds a few lines, don't put in a lambda.
+
+In summary, as of Java 8, lambdas are by far the best way to represent small function objects. 
+Don’t use anonymous classes for function objects unless you have to create instances of types that aren’t functional interfaces. 
+Also, remember that lambdas make it so easy to represent small function objects that it opens the door to functional programming techniques 
+that were not previously practical in Java.
+
+
+## 43. Prefer method references to lambdas
+
+For example: 
+```java
+  map.merge(key, 1, (count, incr) -> count + incr); 
+  // Could be replaced by 
+  map.merge(key, 1, Integer::sum);  
+```
+
+__Method reference examples and lambda Equivalent__
+
+| Method ref Type    | Example                                             | Lambda Equivalent        |
+|:-------------------|:----------------------------------------------------|:-------------------------|
+| Static             | str -> Integer.parseInt(str)                        | Integer::parseInt        |
+| Bound              | Instant then = Instant.now(); t -> then.isAfter(t); | Instant.now()::isAfter   |
+| Unbound            | str -> str.toLowerCase()                            | String::toLowerCase      |
+| Class Constructor  | () -> new TreeMap<K, V>                             | TreeMap<K, V>::new       |
+| Array Constructor  | len -> new int[len]                                 | int[]::new               |
+
+## 44. Favor the use of standard functional
+
+__The six basic functional interfaces are summarized below__
+
+| Interface          | Function Signature   |   Example               |
+|:-------------------|:---------------------|:------------------------|
+| UnaryOperator<T>   | T apply(T t)         | String::toLowerCase     |   
+| BinaryOperator<T>  | T apply(T t1, T t2)  | BigInteger::add         |   
+| Predicate<T>       | boolean test(T t)    | Collection::isEmpty     |
+| Function<T,R>      | R apply(T t)         | Arrays::asList          |
+| Supplier<T>        | T get()              | Instant::now            |
+| Consumer<T>        | void accept(T t)     | System.out::println     |
+
+The _java.util.function_ package provides a large collection of standard functional interfaces for your use. 
+If one of the standard functional interfaces does the job, you should generally use it in preference to a purpose-built functional interface.
+
+
+Most of the standard functional interfaces exist only to provide support for primitive types. 
+Don’t be tempted to use basic functional interfaces with boxed primitives instead of primitive functional interfaces. 
+While it works, it violates the advice of [**Item 61**](#49-prefer-primitive-types-to-boxed-primitives), “prefer primitive types to boxed primitives.” 
+The performance consequences of using boxed primitives for bulk operations can be deadly.
+
+Always annotate your functional interfaces with the _@FunctionalInterface_ annotation.
+
+## 45. Use streams judiciously
+
+In the absence of explicit types, careful naming of lambda parameters is essential to the readability of stream pipelines.
+
+Using helper methods is even more important for readability in stream pipelines than in iterative code because pipelines lack explicit type information and named temporary variables.
+
+
+```java
+  "Hello world!".chars().forEach(System.out::print);
+```
+
+You might expect it to print Hello world!, but if you run it, you’ll find that it prints 721011081081113211911111410810033.
+
+Below code snippet is correct way to print string char by char, however, ideally you should avoid from using streams to process *char* values.
+
+ 
+```java
+  "Hello world!".chars().forEach(x -> System.out.print((char) x));
+```
+
+```java
+// Iterative Cartesian product computation
+  private static List<Card> newDeck() {
+    List<Card> result = new ArrayList<>();
+    for (Suit suit : Suit.values()) {
+      for (Rank rank : Rank.values()) {
+        result.add(new Card(rank, suit));
+      }
+    }
+    return result;
+  }
+```
+
+```java
+  // Stream Cartesian product computation
+  private static List<Card> newDeckByStream() {
+    return Stream.of(Suit.values())
+        .flatMap(suit -> Stream.of(Rank.values())
+            .map(rank -> new Card(rank, suit)))
+        .collect(Collectors.toList());
+  }
+```
+**NB** If you’re not sure whether a task is better served by streams or iteration, try both and see which works better.
+
+
+## 46. Prefer side-effect-free functions of streams
+
+Occasionally, you may see streams code that looks like this snippet, which builds a frequency table of the words in a text file:
+Problem is here code is doing all its work in a terminal _forEach_ operation, using a lambda mutates external state.
+```java
+Map<String, Long> freq = new HashMap<>();
+try (Stream<String> words = new Scanner(file).tokens()) {
+    words.forEach(word -> {
+        freq.merge(word.toLowerCase(), 1L, Long::sum);
+    });
+} 
+```
+
+So how should this code look?
+
+```java
+// Proper use of streams to initialize a frequency table
+Map<String, Long> freq;
+try (Stream<String> words = new Scanner(file).tokens()) {
+    freq = words
+        .collect(groupingBy(String::toLowerCase, counting()));
+}
+```
+
+The forEach operation should be used only to report the result of a stream computation, not to perform the computation.
+
+```java
+// Pipeline to get a top-ten list of words from a frequency table
+List<String> topTen = freq.keySet().stream()
+    .sorted(comparing(freq::get).reversed())
+    .limit(10)
+    .collect(toList());
+```
+
+```java
+// Collector to generate a map from key to chosen element for key
+Map<Artist, Album> topHits = albums.collect(
+   toMap(Album::artist, a->a, maxBy(comparing(Album::sales)))); 
+
+// Collector to impose last-write-wins policy
+toMap(keyMapper, valueMapper, (v1, v2) -> v2)
+
+//list of the words sharing the alphabetization
+Map<String, List<String>> wordMap = words.collect(groupingBy(word -> alphabetize(word)))”
+
+//frequency of words
+Map<String, Long> freq = words.collect(groupingBy(String::toLowerCase, counting()));
+```
+
+## 47. Prefer Collection to Stream as return Type
+
+```java
+  // Adapter from Iterable<E> to Stream<E>
+  public static <E> Stream<E> streamOf(Iterable<E> iterable) {
+    return StreamSupport.stream(iterable.spliterator(), false);
+  }
+```
+
+The Collection interface is a subtype of Iterable and has a stream method, so it provides for both iteration and stream access. 
+Therefore, Collection or an appropriate subtype is generally the best return type for a public, sequence-returning method. 
+
+Arrays also provide for easy iteration and stream access with the _Arrays.asList_ and _Stream.of_ methods.
+
+Example returns a stream of all the sublists of its input list [**SubList**](src/main/java/kata/effective/java/item47/SubLists.java).
+
+## 48. Use caution when making streams parallel
+
+Do not parallelize stream pipelines indiscriminately. The performance consequences may be disastrous.
+
+Just check the parallel and and non paralel version of [**Test Parallel stream **](src/main/java/kata/effective/java/item48/TestParallelStream.java)
+
+As a rule, performance gains from parallelism are best on streams over _ArrayList, HashMap, HashSet, and ConcurrentHashMap instances; arrays; int ranges; and long ranges_. 
+What these data structures have in common is that they can all be accurately and cheaply split into subranges of any desired sizes, 
+which makes it easy to divide work among parallel threads. 
+
+The abstraction used by the streams library to perform this task is the spliterator, which is returned by the spliterator method on Stream and Iterable.
+
+
+Not only can parallelizing a stream lead to poor performance, including liveness failures; it can lead to incorrect results and unpredictable behavior.
+
+Under the right circumstances, it is possible to achieve near-linear speedup in the number of processor cores simply by adding a parallel call to a stream pipeline.
+[**Example**](src/main/java/kata/effective/java/item48/TestParallelStream.java) The best case scenario.  
+
+# 8. METHODS
 ## 38. Check parameters for validity
 Check parameters before execution as soon as possible.
 
