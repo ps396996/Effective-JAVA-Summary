@@ -2571,7 +2571,7 @@ Most local variable declaration should contain an initializer.
 Prefer for loops to while loops.  
 Keep methods small and focused.   
 
-## 46. Prefer for-each loops to traditional for loops.
+## 58. Prefer for-each loops to traditional for loops.
 ```java
 
 	 // No longer the preferred idiom to iterate over a collection!
@@ -2637,7 +2637,7 @@ Situations where you can’t use a for-each loop:
 * **Transforming—If** you need to traverse a list or array and replace some or all of the values of its elements, then you need the list iterator or array index in order to set the value of an element.
 * **Parallel iteration—If** you need to traverse multiple collections in parallel, then you need explicit control over the iterator or index variable, so that all it- erators or index variables can be advanced in lockstep (as demonstrated unin-tentionally in the buggy card examples above).
 
-## 47. Know and use libraries
+## 59. Know and use libraries
 By using a standard library:
 
 * Advantage of the knowledge of the experts who wrote it and the experience of those who used it before you.
@@ -2654,10 +2654,10 @@ Every programmer should be familiar with:
 * java.io
 * java.util.concurrent  
 
-## 48. Avoid float and double if exact answer are required
+## 60. Avoid float and double if exact answer are required
 For monetary calculations use _int_(until 9 digits) or _long_ (until 18 digits) taken you care of the decimal part and you don't care too much about the rounding. Use _BigDecimal_ for numbers bigger that 18 digits and if you need full control of the rounding methods used.
 
-## 49. Prefer primitive types to boxed primitives
+## 61. Prefer primitive types to boxed primitives
 Primitives: _int_, _double_, _boolean_   
 Boxed Primitives: _Integer_, _Double_, _Boolean_   
 Differences:
@@ -2675,16 +2675,14 @@ Don't use **==** between boxed primitives.
 ```
 Use Auto-unboxing to create new primitives
 ```java
-
 	...
 	int f = first;  //Auto-unboxing
 	int s = second  //Auto-unboxing
 	f == s;// This is true
 ```
 
-If a Boxed primitive is not initialize it will return null
+If a Boxed primitive is not initialize it will return null.
 ```java
-
 	Integer  i;
 	i == 42 // NullPointerException
 ```
@@ -2699,7 +2697,7 @@ When you **must** use boxed primitives:
 
 In other cases prefer primitives.
 
-## 50. Avoid Strings where other types are more appropriate
+## 62. Avoid Strings where other types are more appropriate
 * Strings are more cumbersome than other types.
 * Strings are less flexible than other types.
 * String are slower than other types.
@@ -2711,7 +2709,7 @@ In other cases prefer primitives.
 
 So, use String to represent text!
 
-## 51. Beware the performance of string concatenation
+## 63. Beware the performance of string concatenation
 
 Using the string concatenation operator repeatedly to concatenate _n_ strings requires time quadratic in _n_.
 
@@ -2738,7 +2736,7 @@ To achieve acceptable performance, use StringBuilder in place of String.
 	}
 ```
 
-## 52. Refer to objects by their interface
+## 64. Refer to objects by their interface
 If appropriate interface types exist, then parameters, return values, variables, and fields should all be declared using interface types.
 
 ```java
@@ -2766,7 +2764,7 @@ If there is not an appropriate interface we can refer to the object by a class. 
 * Framework classes
 * Classes that extend the interface functionality with extra methods.
 
-## 53. Prefer interfaces to reflection
+## 65. Prefer interfaces to reflection
 _java.lang.reflection_ offers access to information about loaded classes.
 
 Given a _Class_ object, you can obtain _Constructor_, _Method_ and _Field_ instances.
@@ -2780,45 +2778,14 @@ Allows one class to use another, even if the latter class did not exist when the
 **As a rule, objects should not be accessed reflectively in normal applications at runtime**
 
 Obtain many of the benefits of reflection incurring few of its costs by **creating instances reflectively and access them normally via their interface or superclass**.
-
-```java
-
-	// Reflective instantiation with interface access
-	public static void main (String[] args){
-		// Translate the class name into a class object
-		Class<?> cl =  null;
-		try{
-			cl = Class.forName(args[0]);// Class is specified by the first command line argument
-		}catch(ClassNotFoundException e){
-			System.err.println("Class not found");
-			System.exit(1);
-		}
-
-		//Instantiate the class
-		Set<String> s = null;
-		try{
-			s = (Set<String>) cl.newInstance(); //  The class can be either a HashSet or a TreeSet
-		} catch(IllegalAccessException e){
-			System.err.println("Class not accessible");
-			System.exit(1);
-		}catch(InstantionationException e){
-			System.err.println("Class not instantiable");
-			System.exit(1);
-		}
-
-		//Excercise the Set
-		// Print the remaining arguments. The order depends in the class. If it is a HashSet
-		// the order will be random, if it is a TreeSet it will be alphabetically
-		s.addAll(Arrays.asList(args).subList(1,args.length));
-		System.out.println(s);
-	}
-```
+[Example](src/main/java/kata/effective/java/item65/InterfaceToReflection.java)
 
 A legitimate use of reflection is to manage a class's dependencies on other classes, methods or fields that may be absent at runtime.
 
 Reflection is powerful and useful in some sophisticated systems programming tasks. It has many disadvantages.
 Use reflection, if possible, only to instantiate objects and access the objects using an interface or a superclass that is known at compile time.
-## 54. Use native methods judiciously
+
+## 66. Use native methods judiciously
 Historically, native methods have had three main uses.
 
 * They provided access to platform-specific facilities.
@@ -2827,20 +2794,19 @@ Historically, native methods have had three main uses.
 
 New Java versions make use of NDK rarely advisable for improve performance.
 
-## 55. Optimize judiciously
+## 67. Optimize judiciously
 Strive to write good programs rather than fast ones, speed will follow.  
 If a good program is not fast enough, its architecture will allow it to be optimized.
 
 * More computing sins are committed in the name of efficiency (without necessarily achieving it) than for any other single reason — including blind stupidity.
-* We should forget about small efficiencies, say about 97% of the time: premature
-optimization is the root of all evil.
+* We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil.
 * We follow two rules in the matter of optimization:
 	* Rule 1. Don't do it.
 	* Rule 2 (for experts only). Don't do it yet — that is, not until you have a perfectly clear and unoptimized solution.
 
 If you finally do it **measure performance before and after each attempted optimization**, and focus firstly in the  choice of algorithms rather than in low level optimizations.
 
-## 56. Adhere to generally accepted naming conventions
+## 68. Adhere to generally accepted naming conventions
 **Typographical naming conventions**
 
 | Indentifier Type        |  Examples 								      |
