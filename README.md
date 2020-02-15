@@ -1,4 +1,6 @@
-_This is my summary of the Effective Java 2nd Edition by Joshua Bloch. I use it while learning and as quick reference. It is not intended to be an standalone substitution of the book so if you really want to learn the concepts here presented, buy and read the book and use this repository as a reference and guide._
+_This is my summary of the Effective Java 2nd Edition by Joshua Bloch. I use it while learning and as quick reference. 
+It is not intended to be an standalone substitution of the book so if you really want to learn the concepts here presented, 
+buy and read the book and use this repository as a reference and guide._
 
 _If you are the publisher and think this repository should not be public, just write me an email at hugomatilla [at] gmail [dot] com and I will make it private._
 
@@ -272,6 +274,7 @@ Used for example to:
 		...
 	}
 ```
+
 ## 5. Prefer dependency injection to hardwiring resources
 
 Many classes depend on one or multiple resources. For example, below 2 examples shows this dependency but the implementation of this dependency aren't flexible.
@@ -716,7 +719,6 @@ You can use catch clause to detect and take your action in case of excetions.
 The lesson is clear: Always user try-with-resource in preference to try-finally when working with resource which must ve closed. 
 The resulting code is shorter and clear, the exceptions that it generates much more useful. 
 
-
 # 3. METHODS COMMON TO ALL OBJECTS
 ## 10. Obey the general contract when overriding *equals*
 
@@ -771,7 +773,6 @@ A class has a notion of _logical equality_ that differs from mere object identit
 * Don't try to be too clever (simplicity is your friend)
 * Don't substitute another type for _Object_ in the _equals_ declaration
 
-
 ## 11. Always override _hashCode_ when you override *equals*
 
 **_Contract of hashCode_**
@@ -814,6 +815,7 @@ The second condition is the one that is more often violated.
 		return result;
 	}
 ```
+
 ## 12. Always override _toString_
 
 Providing a good _toString_ implementation makes your class much more pleasant to read.
@@ -1028,8 +1030,6 @@ If a class is accessed **outside its package**, provide **accesor methods**.
 If a class is **package-private or is a private nested class**, its **ok to expose** its data fields.
 
 In **public classes** it is a questionable option to **expose immutable fields**.
-
-
 
 ## 17. Minimize Mutability
 All the information of the instance is provided when it is created.
@@ -1267,7 +1267,6 @@ Skeletal implementations are designed for inheritance so follow [Item 19](#19-de
 _simple implementation_ is like a skeletal implementation in that it implements the simplest possible working implementation.
 
 Cons: It is far easier to evolve an abstract class than an interface. Once an interface is released and widely implemented, it is almost impossible to change.
-
 
 ## 21. Design interface for posterity
 
@@ -1788,7 +1787,6 @@ Comparable and Comparators are always consumers. Use `Comparable<? super T>` and
 
 If a type parameter appears only once in a method declaration, replace it with a wildcard.
 
-
 ## 32. Combine generics and varargs judiciously.
 
 Below method will throws a ClassCastException when invoke one or more paramters.
@@ -1817,6 +1815,9 @@ Thanks to the type of the class literal. `Class<T>`
 [FavoritesImpl.java](src/main/java/kata/effective/java/item33/FavoritesImpl.java)
  
  
+
+ 
+
 # 6. ENUMS AND ANNOTATIONS
 ## 34. Use enums instead of _int_ constants
 Enums are classes that export one instance for each enumeration constant via a public static final field.
@@ -1858,6 +1859,7 @@ Better approach
 		public int numberOfMusicians() {return numberOfMusicians;}
 	}
 ```
+
 ## 36. Use EnumSet instead of bit fields
 If the elements of an enumerated are used primarily in sets, use EnumSet.
 
@@ -1899,8 +1901,6 @@ Stream version [Phase.java](src/test/java/kata/effective/java/item37/PlantTest.j
 
 Using a nested EnumMap to associate data with enum pairs see documentation [Phase.java](src/main/java/kata/effective/java/item37/Phase.java) 
 
-
-
 ## 38. Emulate extensible enums with interfaces
 Enums types can not extend another enum types.
 
@@ -1913,7 +1913,6 @@ _BasicOperation_ is not extensible, but the interface type _Operation_ is, and i
 
 **Emulated extension type**
 [Extended operation](src/main/java/kata/effective/java/item38/ExtendedOperation.java)
-
 
 ## 39. Prefer annotations to naming patterns
 Sample of the _@Test_ annotation
@@ -2043,7 +2042,6 @@ Don’t use anonymous classes for function objects unless you have to create ins
 Also, remember that lambdas make it so easy to represent small function objects that it opens the door to functional programming techniques 
 that were not previously practical in Java.
 
-
 ## 43. Prefer method references to lambdas
 
 For example: 
@@ -2130,7 +2128,6 @@ Below code snippet is correct way to print string char by char, however, ideally
   }
 ```
 **NB** If you’re not sure whether a task is better served by streams or iteration, try both and see which works better.
-
 
 ## 46. Prefer side-effect-free functions of streams
 
@@ -2277,7 +2274,10 @@ Make a _defensive copy_ of each mutable parameter to the constructor.
 			throw new IllegalArgumentException(start + " after " + end );
 		}
 ```
-Defensive copies are made before checking the validity of the parameter ([Item 38](#38-check-parameters-for-validity)), and the validity check is performed on the copies rather than on the originals. It protects the class against changes to the parameters from another thread during the time between the parameters are checked and the time they are copied.(_Window of vulnerability_,time-of-check/time-of-use _TOCTOU_ attack)
+Defensive copies are made before checking the validity of the parameter ([Item 38](#38-check-parameters-for-validity)), 
+and the validity check is performed on the copies rather than on the originals. 
+It protects the class against changes to the parameters from another thread during the time between the parameters are checked and the time they are copied.
+(_Window of vulnerability_,time-of-check/time-of-use _TOCTOU_ attack)
 
 
 Do not use _clone_ method to make a defensive copy of a parameter whose type is subclass-able by untrusted parties.
@@ -2313,7 +2313,6 @@ Preferable is to use **immutable objects**([Item 15](#15-minimize-mutability))
 * Avoid long parameter list. Make a subset of methods, helper classes ([Item 22](#22-favor-static-member-classes-over-nonstatic)), or a builder ([Item 2](#2-use-builders-when-faced-with-many-constructors)) instead.
 * For parameter types, favor interfaces over classes ([Item 52](#52-refer-to-objects-by-their-interface)) No reason to write a method that takes a _HashMap_ on input, use _Map_ instead.
 * Prefer two-element enum types to _boolean_ parameters. `public enum TemperatureScale {CELSIUS, FARENHEIT}`
-
 
 ## 52. Use overloading judiciously
 The choice of which overloading to invoke is made at compile time.
@@ -2435,6 +2434,7 @@ Return an immutable empty array instead of null.
 			return new ArrayList<Cheese>(cheesesInStock);
 	}
  ```
+
 ## 55. Return optional judiciously
 
 
@@ -2515,8 +2515,6 @@ streamOfOptionals.
 
 For a performance critical methods it is better to return a null or throw an error.
 
-
-
 ## 56. Write _doc comments_ for all exposed API elemnts
 To document your API properly, you must precede every exported class, interface, constructor, method, and field declaration with a doc comment.
 
@@ -2564,7 +2562,7 @@ Don't forget to documment:
 * The _thread-safety level_  ([Item 70](#70-document-thread-safety))
 * The _serialized form_ ([Item 75](#75-consider-using-a-custom-serialized-form)), if the class is _serializable_
 
-# 8. GENERAL PROGRAMMING
+# 9. GENERAL PROGRAMMING
 ## 57. Minimize the scope of local variables.
 Declare local variable where it is first used.  
 Most local variable declaration should contain an initializer.  
@@ -2835,7 +2833,7 @@ If you finally do it **measure performance before and after each attempted optim
 | return a view ([Item 5](#5-avoid-creating-objects)) of a different type  	| _asType_				| asList 													|
 | return a primitive with the same value 		| _typeValue_			| intValue 													|
 
-# 9. EXCEPTIONS
+# 10. EXCEPTIONS
 ## 69. Use exceptions only for exceptional conditions
 Exceptions are  for exceptional conditions.  
 Never use or (expose in the API) exceptions for ordinary control flow.
@@ -2879,6 +2877,7 @@ Invocation with state-testing method and unchecked exception
 		...
 	}
 ```
+
 ## 72. Favor the use of standard exceptions
 | Exception                       |  Occasion for Use                                                              |
 |---------------------------------|--------------------------------------------------------------------------------|
@@ -2944,6 +2943,7 @@ When the lower-level exception is utile for the debugger, pass the lower-level t
 		}
 	}
 ```
+
 ## 74. Document all exceptions thrown by each method
 
 Unchecked exceptions generally represent programming errors ([Item 70](#70-use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors)), 
@@ -2984,8 +2984,8 @@ Don't let catch blocks empty.
 	}
 ```
 
-# 10. CONCURRENCY
-## 66. Synchronize access to shared mutable data
+# 11. CONCURRENCY
+## 78. Synchronize access to shared mutable data
 Synchronization prevent a thread from observing an object in an inconsistent state.
 Synchronization ensures that each thread entering a synchronized method or block sees the effects
 of all previous modifications that were guarded by the same lock.
@@ -3102,7 +3102,8 @@ AtomicLong can help us with the synchronization of long values
 		return nextSerialNum.getAndIncrement();
 	}
 ```
-**effectively immutable**: data object  modified by one thread to modify shared it with other threads, synchronizing only the act of sharing the object reference. Other threads can then read the object without further synchronization, so long as it isn't modified again.
+**effectively immutable**: data object  modified by one thread to modify shared it with other threads, synchronizing only the act of sharing the object reference. 
+Other threads can then read the object without further synchronization, so long as it isn't modified again.
 
 **safe publication**: Transferring such an object reference from one thread to others.
 
@@ -3111,9 +3112,10 @@ _In general:_ When multiple threads share mutable data, each thread that reads o
 
 _Best thing to do:_ **Not share mutable data.**
 
-## 67. Avoid excessive synchronization
-Inside a synchronized region, do not invoke a  method (_alien_) that is designed to be overridden, or one provided by a client in the form of a function object ([Item 21](#21-use-function-objects-to-represent-strategies)). Calling it from a synchronized region can cause exceptions,
-deadlocks, or data corruption.
+## 79. Avoid excessive synchronization
+Inside a synchronized region, do not invoke a  method (_alien_) that is designed to be overridden,
+ or one provided by a client in the form of a function object ([Item 21](#21-use-function-objects-to-represent-strategies)). 
+ Calling it from a synchronized region can cause exceptions, deadlocks, or data corruption.
 Move alien method invocations out of synchronized blocks. Taking a “snapshot” of the object that can then be safely traversed without a lock.
 
 ```java
@@ -3128,7 +3130,7 @@ Move alien method invocations out of synchronized blocks. Taking a “snapshot�
 			observer.added(this, element);
 	}
 ```
-Or use a _concurrent collection_ ([Item 69](#69-prefer-concurrency-utilities-to-wait-and-notify)) known as CopyOnWriteArrayList. It is a variant of ArrayList in which all write operations are implemented by making a fresh copy of the entire underlying array.
+Or use a _concurrent collection_ ([Item 81](#81-prefer-concurrency-utilities-to-_wait_-and-_notify_)) known as CopyOnWriteArrayList. It is a variant of ArrayList in which all write operations are implemented by making a fresh copy of the entire underlying array.
 The internal array is never modified and iteration requires no locking.
 
 **open call**: An alien method invoked outside of a synchronized region
@@ -3138,7 +3140,7 @@ _As Rule_:
 * **do as little work as possible inside synchronized regions**
 * **limit the amount of work that you do from within synchronized regions**
 
-## 68. Prefer executors and tasks to threads
+## 80. Prefer executors, tasks and streams to threads
 Creating a work queue:
 ```java
 
@@ -3174,17 +3176,19 @@ For heavily loaded application, use: `Executors.newFixedThreadPool`
 * Runnable
 * Callable, similar to Runnable but returns a value
 
-## 69. Prefer concurrency utilities to _wait_ and _notify_
+## 81. Prefer concurrency utilities to _wait_ and _notify_
 Given the difficulty of using wait and notify correctly, you should use the higher-level concurrency utilities instead.
 
-* Executor Framework ([Item 68](#68-prefer-executors-and-tasks-to-threads))
+* Executor Framework ([Item 80](#80-prefer-executors-tasks-and-streams-to-threads))
 * Concurrent Collections
 * Synchronizers
 
 **Concurrent Collections**: High-performance concurrent implementations of standard collection interfaces (List, Queue, and Map)  
 Use concurrent collections in preference to externally synchronized collections   
-Some interfaces have been extended with blocking operations, which wait (or block) until they can be successfully performed. This allows blocking queues to be used for work queues ( _producer-consumer queues_). One or more producer threads enqueue work items and from which one or more consumer threads dequeue and process
-items as they become available. ExecutorService implementations, including ThreadPoolExecutor, use a BlockingQueue ([Item 68](#68-prefer-executors-and-tasks-to-threads)).
+Some interfaces have been extended with blocking operations, which wait (or block) until they can be successfully performed. 
+This allows blocking queues to be used for work queues ( _producer-consumer queues_). 
+One or more producer threads enqueue work items and from which one or more consumer threads dequeue and process items as they become available. 
+ExecutorService implementations, including ThreadPoolExecutor, use a BlockingQueue ([Item 80](#80-prefer-executors-tasks-and-streams-to-threads)).
 
 **Synchronizers**: objects that enable threads to wait for one another, allowing them to coordinate their activities (CountDownLatch, Semaphore, CyclicBarrier, Exchanger)
 
@@ -3207,7 +3211,8 @@ Use always use _notifyAll_ (and not forget to use the wait loop explained before
 You may wake some other threads, but these threads will check the condition for which they're waiting and, finding it false, will continue waiting.
 
 **There is seldom, if ever, a reason to use wait and notify in new code.** Use higher-level language
-## 70. Document thread safety
+
+## 81. Document thread safety
 Looking for  the synchronized modifier in a method declaration is an implementation detail.
 To enable safe concurrent use, a class must clearly document what level of thread safety it supports.
 
