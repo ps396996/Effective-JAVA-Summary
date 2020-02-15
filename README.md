@@ -3315,14 +3315,23 @@ tasks should be:
 
 
 # 11. SERIALIZATION
-## 74. Implement _Serializable_ judiciously
+## 85. Prefer alternatives to Java serialization
+There is no reason to use Java serialization in any new system you write.
+Never deserialize untrusted data.
+
+In summary, serialization is dangerous and should be avoided. 
+If you are designing a system from scratch, use a cross-platform structured-data representation such as JSON or protobuf instead. 
+Do not deserialize untrusted data. If you must do so, use object deserialization filtering, but be aware that it is not guaranteed to thwart all attacks. 
+Avoid writing serializable classes. If you must do so, exercise great caution.
+
+## 86. Implement Serializable with great caution
 Adding `implements Serializable` is the easiest way to serialize a class, but it decreases the flexibility
 to change a class's implementation once it has been released. The byte-stream encoding (or serialized form)
 becomes part of its exported API.
 
 It has three major drawbacks:
 
-* Class's private and package-private instance fields become part of its exported API ([Item 13](#13-minimize-the-accesibility-of-classes-and-members))
+* Class's private and package-private instance fields become part of its exported API ([Item 15](#15-minimize-the-accesibility-of-classes-and-members))
 * Change the class's internal representation, will cause make old versions of serialized objects incompatible.
 * Increases the likelihood of bugs and security holes.
 * Increases the testing burden associated with releasing a new version of a class.
@@ -3340,11 +3349,11 @@ Implementing the Serializable interface has many real costs.
 * Classes representing active entities, such as thread pools
 * Classes designed for inheritance
 * Interfaces should rarely extend it
-* Inner classes ([Item 22](#22-favor-static-member-classes-over-nonstatic))
+* Inner classes ([Item 24](#24-favor-static-member-classes-over-nonstatic))
 
 A subclass of a not serializable class can not be serializable, unless it has a parameterless constructor.
 
-## 75. Consider using a custom serialized form
+## 87. Consider using a custom serialized form
 Do not accept the default serialized form without first considering whether it is appropriate.  
 The default serialized form is likely to be appropriate if an object's physical representation is identical to its logical content. Like a Point or Person Name.   
 Even if you decide that the default serialized form is appropriate, you often must provide a `readObject` method to ensure invariants and security
@@ -3375,11 +3384,12 @@ Declare an explicit serial version UID in every serializable class you write.
 
 	private static final long serialVersionUID = randomLongValue ;
 ```
-## 76. Write _readObject_ methods defensively
+
+## 88. Write _readObject_ methods defensively
 _readObject_ method is a public constructor that takes a byte stream as its sole parameter. It demands  same care as any other public constructor:
 
-*  check its arguments for validity ([Item 38](#38-check-parameters-for-validity))
-*  make defensive copies of parameters where appropriate ([Item 39](#39-make-defensive-copies-when-needed))
+*  check its arguments for validity ([Item 49](#49-check-parameters-for-validity))
+*  make defensive copies of parameters where appropriate ([Item 50](#50-make-defensive-copies-when-needed))
 
 ```java
 
@@ -3407,7 +3417,7 @@ Summary guidelines:
 * If an entire object graph must be validated after it is deserialized, use the _ObjectInputValidation_ interface [JavaSE6, Serialization].
 * Do not invoke any overridable methods in the class, directly or indirectly.
 
-## 77. For instance control, prefer _enum_ types to _readResolve_
+## 89. For instance control, prefer _enum_ types to _readResolve_
 _Singleton_ classes would no longer be singletons if they “implements Serializable”.
 The _readResolve_ feature allows you to substitute another instance for the one created by _readObject_. So the original instance is returned.
 
@@ -3424,7 +3434,7 @@ Accessibility: _readResolve_ method on:
 	* package-private: it will apply only to subclasses in the same package.
 	* protected or public: it will apply to all subclasses that do not override it.
 
-## 78. Consider serialization proxies instead of serialized instances
+## 90. Consider serialization proxies instead of serialized instances
 _serialization proxy_: A private static nested class of the serializable class that represents the logical state of an instance of the enclosing class.  
 It has a single constructor, whose parameter type is the enclosing class, and copies the data from its arguments.  
 No need of consistency checking or defensive copying.
@@ -3481,5 +3491,5 @@ Add a _readResolve_ method on the _SerializationProxy_ class to return a logical
 
 Limitations, not compatible with:
 
-* classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
+* classes that are extendable by their clients ([Item 19](#19-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
