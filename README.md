@@ -2836,11 +2836,11 @@ If you finally do it **measure performance before and after each attempted optim
 | return a primitive with the same value 		| _typeValue_			| intValue 													|
 
 # 9. EXCEPTIONS
-## 57. Use exceptions only for exceptional conditions
+## 69. Use exceptions only for exceptional conditions
 Exceptions are  for exceptional conditions.  
 Never use or (expose in the API) exceptions for ordinary control flow.
 
-## 58. Use checked exceptions for recoverable conditions and runtime exceptions for programming errors
+## 70. Use checked exceptions for recoverable conditions and runtime exceptions for programming errors
 Throwables:
 
 * checked exceptions: for conditions from which the caller can reasonably be expected to recover
@@ -2850,10 +2850,10 @@ Throwables:
 
 Unchecked throwables that you implement should **always** subclass _RuntimeException_.
 
-## 59. Avoid unnecessary use of checked exceptions
+## 71. Avoid unnecessary use of checked exceptions
 Use checked exceptions only if these 2 conditions happen:
 
-* The  exceptional condition cannot be prevented by proper use of the API
+* The exceptional condition cannot be prevented by proper use of the API
 * The programmer using the API can take some useful action once confronted with the exception.
 
 Refactor the checked exception into a unchecked exception to make the API more pleasant.
@@ -2879,7 +2879,7 @@ Invocation with state-testing method and unchecked exception
 		...
 	}
 ```
-## 60. Favor the use of standard exceptions
+## 72. Favor the use of standard exceptions
 | Exception                       |  Occasion for Use                                                              |
 |---------------------------------|--------------------------------------------------------------------------------|
 | IllegalArgumentException        |  Non-null parameter value is inappropriate                                     |
@@ -2918,7 +2918,7 @@ Invocation with state-testing method and unchecked exception
 | IntrospectionException         | PropertyVetoException             | XMLStreamException              |
 | InvalidApplicationException    | ReflectiveOperationException      | XPathException                  |
 
-## 61. Throw exceptions appropriate to the abstraction
+## 73. Throw exceptions appropriate to the abstraction
 Higher layers should catch lower-level exceptions and, in their place, throw exceptions that can be explained in terms of the higher-level abstraction.
 ```java
 
@@ -2944,26 +2944,27 @@ When the lower-level exception is utile for the debugger, pass the lower-level t
 		}
 	}
 ```
-## 62. Document all exceptions thrown by each method
-Unchecked exceptions generally represent programming errors ([Item 58](#58-use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors)), and familiarizing programmers with all of the errors they can make helps them avoid making these errors.
+## 74. Document all exceptions thrown by each method
+
+Unchecked exceptions generally represent programming errors ([Item 70](#70-use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors)), 
+and familiarizing programmers with all of the errors they can make helps them avoid making these errors.
 
 Always declare checked exceptions individually, and document precisely the conditions under which each one is thrown using the Javadoc @throws tag.
 
 Do not use the throws keyword to include unchecked exceptions in the method declaration.
 
-## 63. Include failure-capture information in detail messages
-It is critically important that the exception’s `toString` method return as much information as possible concerning
-the cause of the failure.
+## 75. Include failure-capture information in detail messages
+It is critically important that the exception’s `toString` method return as much information as possible concerning the cause of the failure.
 To capture the failure, the detail message of an exception should contain the values of all parameters and fields that contributed to the exception.
-One way to ensure that is to require this information in their constructors instead of a string detail message. Also provide accessors to this parameters could help useful to recover from the failure
+One way to ensure that is to require this information in their constructors instead of a string detail message. 
+Also provide accessors to this parameters could help useful to recover from the failure
 
 ```java
-
 	// Alternative IndexOutOfBoundsException.
 	public IndexOutOfBoundsException(int lowerBound, int upperBound, int index) {...}
 ```
 
-## 64. Strive for failure atomicity
+## 76. Strive for failure atomicity
 A failed method invocation should leave the object in the state that it was in prior to the invocation.
 Options to achieve this:
 
@@ -2972,7 +2973,7 @@ Options to achieve this:
 * Write recovery code (Undo operation)
 * Perform the operation on a temporary copy of the object, and replace it once is completed.
 
-## 65. Don't ignore exceptions
+## 77. Don't ignore exceptions
 Don't let catch blocks empty.
 ```java
 
