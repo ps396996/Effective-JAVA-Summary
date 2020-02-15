@@ -2216,21 +2216,21 @@ Under the right circumstances, it is possible to achieve near-linear speedup in 
 [**Example**](src/main/java/kata/effective/java/item48/TestParallelStream.java) The best case scenario.  
 
 # 8. METHODS
-## 38. Check parameters for validity
+## 49. Check parameters for validity
 Check parameters before execution as soon as possible.
 
 Add in public methods _@throw_, and use _assertions_ in non public methods
 
 Do it also in constructors.
 
-## 39. Make defensive copies when needed.
+## 50. Make defensive copies when needed.
 
 You must program defensively, with the assumption that clients of your class will do their best to destroy its invariants.
 
 ```java
 
 	//Broken "immutable" time period
-	public final class Period{
+	public final class Period {
 		private final Date start;
 		private final Date end;
 		/**
