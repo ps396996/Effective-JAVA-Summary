@@ -2306,7 +2306,7 @@ Return _defensive copies_ of mutable internal fields.
 
 Preferable is to use **immutable objects**([Item 15](#15-minimize-mutability))
 
-## 40. Design method signatures carefully
+## 51. Design method signatures carefully
 
 * Choose method names carefully. ([Item 56](#56-adhere-to-generally-accepted-naming-conventions))
 * Don't go overboard in providing convenience methods. Don't add too many.
@@ -2315,7 +2315,7 @@ Preferable is to use **immutable objects**([Item 15](#15-minimize-mutability))
 * Prefer two-element enum types to _boolean_ parameters. `public enum TemperatureScale {CELSIUS, FARENHEIT}`
 
 
-## 41. Use overloading judiciously
+## 52. Use overloading judiciously
 The choice of which overloading to invoke is made at compile time.
 Selection among overloaded methods is static, while selection among overridden methods is dynamic.
 ```java
@@ -2391,7 +2391,7 @@ when passed the same parameters. To ensure this, have the more specific overload
 	}
 ```
 
-## 42. Use varargs judiciously
+## 53. Use varargs judiciously
 varargs methods are a convenient way to define methods that require a variable number of arguments, but they should not be overused.
 ```java
 
@@ -2405,7 +2405,7 @@ varargs methods are a convenient way to define methods that require a variable n
 	}
 ```
 
-## 43. Return empty arrays or collections, not nulls
+## 54. Return empty arrays or collections, not nulls
 There is no reason ever to return null from an array- or collection-valued method instead of returning an empty array or collection
 
 Return an immutable empty array instead of null.
@@ -2435,8 +2435,89 @@ Return an immutable empty array instead of null.
 			return new ArrayList<Cheese>(cheesesInStock);
 	}
  ```
+## 55. Return optional judiciously
 
-## 44. Write _doc comments_ for all exposed API elemnts
+
+Returns maximum value in collection - throws exception if empty
+```java
+public static <E extends Comparable<E>> E max(Collection<E> c) {
+    if (c.isEmpty())
+        throw new IllegalArgumentException("Empty collection");
+
+    E result = null;
+    for (E e : c)
+        if (result == null || e.compareTo(result) > 0)
+            result = Objects.requireNonNull(e);
+
+    return result;
+}
+```
+
+Returns maximum value in collection as an Optional<E>
+```java
+public static <E extends Comparable<E>>
+        Optional<E> max(Collection<E> c) {
+    if (c.isEmpty())
+        return Optional.empty();
+        
+    E result = null;
+    for (E e : c)
+        if (result == null || e.compareTo(result) > 0)
+            result = Objects.requireNonNull(e);
+
+    return Optional.of(result);
+}
+```
+
+*NB!* Never return a null value from an Optional-returning method.
+
+
+Using an optional to provide a chosen default value
+```java
+String lastWordInLexicon = max(words).orElse("No words...");
+```
+
+Using an optional to throw a chosen exception
+```java
+Toy myToy = max(toys).orElseThrow(TemperTantrumException::new);
+```
+
+Using optional when you know there’s a return value
+```java
+Element lastNobleGas = max(Elements.NOBLE_GASES).get();
+```
+
+2 different ways of printing optional.
+```java
+Optional<ProcessHandle> parentProcess = ph.parent();
+System.out.println("Parent PID: " + (parentProcess.isPresent() ? String.valueOf(parentProcess.get().pid()) : "N/A")); 
+
+System.out.println("Parent PID: " + ph.parent().map(h -> String.valueOf(h.pid())).orElse("N/A"));
+```
+
+JFYI below two code snippets is equivalent of each other.
+```java
+streamOfOptionals
+    .filter(Optional::isPresent)
+    .map(Optional::get)
+```
+
+```java
+streamOfOptionals.
+    .flatMap(Optional::stream)
+```
+
+* You should declare a method to return Optional<T> if it might not be able to return a result and clients will have to perform special processing if no result is returned.
+* You should never return an optional of a boxed primitive type. 
+* More generally it is almost never appropirate to use an optional as a key, value, or element in a collection or array.
+
+*NB!* Container types including collections, map, stream, arrays and optionals shouldn't wrapped into Optional.
+
+For a performance critical methods it is better to return a null or throw an error.
+
+
+
+## 56. Write _doc comments_ for all exposed API elemnts
 To document your API properly, you must precede every exported class, interface, constructor, method, and field declaration with a doc comment.
 
 The doc comment for a method should describe succinctly:
@@ -2464,6 +2545,14 @@ The doc comment for a method should describe succinctly:
 	E get(int index);
 ```
 
+Java Docs Tag to use: 
+* @return      - Allows describe return type unless it doesn't return void 
+* @param       - Allows describe each of param method is required as an input.
+* @throws      - Allows describe each of exception method is throwing.
+* @code        - Allows to attache a code snippets (Example: {@code index < 0 || index >= this.size()})
+* @literal     - Allows to use exceptional char for HTML. (Example: A geometric series converges if {@literal |r| < 1}.)
+* @implSpec    - Allows to document self-use pattern.  (Example: This implementation returns {@code this.size() == 0}.)
+
 Have special care in:
 
 * Generics: document all type parameters
@@ -2476,7 +2565,7 @@ Don't forget to documment:
 * The _serialized form_ ([Item 75](#75-consider-using-a-custom-serialized-form)), if the class is _serializable_
 
 # 8. GENERAL PROGRAMMING
-## 45. Minimize the scope of local variables.
+## 57. Minimize the scope of local variables.
 Declare local variable where it is first used.  
 Most local variable declaration should contain an initializer.  
 Prefer for loops to while loops.  
