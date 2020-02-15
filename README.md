@@ -3212,7 +3212,7 @@ You may wake some other threads, but these threads will check the condition for 
 
 **There is seldom, if ever, a reason to use wait and notify in new code.** Use higher-level language
 
-## 81. Document thread safety
+## 82. Document thread safety
 Looking for  the synchronized modifier in a method declaration is an implementation detail.
 To enable safe concurrent use, a class must clearly document what level of thread safety it supports.
 
@@ -3239,7 +3239,7 @@ Use private lock object idiom to prevent users to hold the lock for a long perio
 	}
 ```
 
-## 71. Use lazy initialization judiciously
+## 83. Use lazy initialization judiciously
 Use it if a field is accessed only on a fraction of the instances of a class and it is costly to initialize the field.  
 It decreases the cost of initializing a class or creating an instance, but increase the cost of accessing it.  
 For multiple threads, lazy initialization is tricky.  
@@ -3301,9 +3301,10 @@ Instance field that can tolerate repeated initialization: **single-check idiom.*
 	}
 ```
 
-## 72. Don't depend on thread scheduler
-Thread scheduler determines which runnable, get to run, and for how long.Operating systems will try to make this
-determination fairly, but the policy can vary. So any program that relies on the thread scheduler for correctness or performance is likely to be non portable.   
+## 84. Don't depend on thread scheduler
+Thread scheduler determines which runnable, get to run, and for how long. 
+Operating systems will try to make this determination fairly, but the policy can vary. 
+So any program that relies on the thread scheduler for correctness or performance is likely to be non portable.   
 To ensure that the average number of runnable threads is not significantly greater than the number of processors.
 Threads should not run if they aren't doing useful work,
 tasks should be:
@@ -3312,8 +3313,6 @@ tasks should be:
 * independent of one another
 * not implement busy-wait
 
-## 73. Avoid thread groups
-Thread groups are obsolete.
 
 # 11. SERIALIZATION
 ## 74. Implement _Serializable_ judiciously
