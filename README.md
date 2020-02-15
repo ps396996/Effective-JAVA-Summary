@@ -5,100 +5,110 @@ buy and read the book and use this repository as a reference and guide._
 _If you are the publisher and think this repository should not be public, just write me an email at hugomatilla [at] gmail [dot] com and I will make it private._
 
 **Contributions:** Issues, comments and pull requests are super welcome :smiley:
-
 # 1. TABLE OF CONTENTS
 - [1. TABLE OF CONTENTS](#1-table-of-contents)
-- [2. CREATING AND DESTROYING OBJECTS](#2-creating-and-destroying-objects)
-	- [1. Use STATIC FACTORY METHODS instead of constructors](#1-use-static-factory-methods-instead-of-constructors)
-	- [2. Use BUILDERS when faced with many constructors](#2-use-builders-when-faced-with-many-constructors)
-	- [3. Enforce the singleton property with a private constructor or an enum type](#3-enforce-the-singleton-property-with-a-private-constructor-or-an-enum-type)
-	- [4. Enforce noninstantiability with a private constructor](#4-enforce-noninstantiability-with-a-private-constructor)
-	- [5. Prefer Dependency Injection to hardwiring resource](#5-prefer-dependency-injection-to-hardwiring-resources)
-	- [5. Avoid creating objects](#5-avoid-creating-objects)
-	- [6. Eliminate obsolete object references](#6-eliminate-obsolete-object-references)
-	- [7. Avoid finalizers](#7-avoid-finalizers)
-- [3. METHODS COMMON TO ALL OBJECTS](#3-methods-common-to-all-objects)
-	- [8. Obey the general contract when overriding *equals*](#8-obey-the-general-contract-when-overriding-equals)
-	- [9. Always override _hashCode_ when you override *equals*](#9-always-override-hashcode-when-you-override-equals)
-	- [10. Always override _toString_](#10-always-override-tostring)
-	- [11. Override _clone_ judiciously](#11-override-clone-judiciously)
-	- [12. Consider implementing _Comparable_](#12-consider-implementing-comparable)
-- [4. CLASSES AND INTERFACES](#4-classes-and-interfaces)
-	- [13. Minimize the accessibility of classes and members](#13-minimize-the-accesibility-of-classes-and-members)
-	- [14. In public classes, use accessor methods, not public fields](#14-in-public-classes-use-accessor-methods-not-public-fields)
-	- [15. Minimize Mutability](#15-minimize-mutability)
-	- [16. Favor composition over inheritance](#16-favor-composition-over-inheritance)
-	- [17. Design and document for inheritance or else prohibit it.](#17-design-and-document-for-inheritance-or-else-prohibit-it)
-	- [18. Prefer interfaces to abstract classes](#18-prefer-interfaces-to-abstract-classes)
-	- [19. Use interfaces only to define types](#19-use-interfaces-only-to-define-types)
-	- [20. Prefer class hierarchies to tagged classes](#20-prefer-class-hierarchies-to-tagged-classes)
-	- [21. Use function objects to represent strategies](#21-use-function-objects-to-represent-strategies)
-	- [22. Favor static member classes over nonstatic](#22-favor-static-member-classes-over-nonstatic)
-- [5. GENERICS](#5-generics)
-	- [23. Don't use raw types in new code](#23-dont-use-raw-types-in-new-code)
-	- [24. Eliminate unchecked warnings](#24-eliminate-unchecked-warnings)
-	- [25. Prefer lists to arrays](#25-prefer-lists-to-arrays)
-	- [26. Favor generic types](#26-favor-generic-types)
-	- [27. Favor generic Methods](#27-favor-generic-methods)
-	- [28. Use bounded wildcards to increase API flexibility](#28-use-bounded-wildcards-to-increase-api-flexibility)
-	- [29. Consider _typesafe heterogeneous containers_](#29-consider-typesafe-heterogeneous-containers)
-- [6. ENUMS AND ANNOTATIONS](#6-enums-and-annotations)
-	- [30. Use enums instead of _int_ constants](#30-use-enums-instead-of-int-constants)
-	- [31. Use instance fields instead of ordinals](#31-use-instance-fields-instead-of-ordinals)
-	- [32. Use EnumSet instead of bit fields](#32-use-enumset-instead-of-bit-fields)
-	- [33. Use EnumMap instead of ordinal indexing](#33-use-enummap-instead-of-ordinal-indexing)
-	- [34. Emulate extensible enums with interfaces](#34-emulate-extensible-enums-with-interfaces)
-	- [35. Prefer annotations to naming patterns](#35-prefer-annotations-to-naming-patterns)
-	- [36. Consistently use the _Override_ annotation](#36-consistently-use-the-override-annotation)
-	- [37. Use marker interfaces to define types](#37-use-marker-interfaces-to-define-types)
-- [7. METHODS](#6-methods)
-	- [38. Check parameters for validity](#38-check-parameters-for-validity)
-	- [39. Make defensive copies when needed.](#39-make-defensive-copies-when-needed)
-	- [40. Design method signatures carefully](#40-design-method-signatures-carefully)
-	- [41. Use overloading judiciously](#41-use-overloading-judiciously)
-	- [42. Use varargs judiciously](#42-use-varargs-judiciously)
-	- [43. Return empty arrays or collections, not nulls](#43-return-empty-arrays-or-collections-not-nulls)
-	- [44. Write _doc comments_ for all exposed API elements](#44-write-doc-comments-for-all-exposed-api-elemnts)
-- [8. GENERAL PROGRAMMING](#7-general-programming)
-	- [45. Minimize the scope of local variables.](#45-minimize-the-scope-of-local-variables)
-	- [46. Prefer for-each loops to traditional for loops.](#46-prefer-for-each-loops-to-traditional-for-loops)
-	- [47. Know and use libraries](#47-know-and-use-libraries)
-	- [48. Avoid float and double if exact answer are required](#48-avoid-float-and-double-if-exact-answer-are-required)
-	- [49. Prefer primitive types to boxed primitives](#49-prefer-primitive-types-to-boxed-primitives)
-	- [50. Avoid Strings where other types are more appropriate](#50-avoid-strings-where-other-types-are-more-appropriate)
-	- [51. Beware the performance of string concatenation](#51-beware-the-performance-of-string-concatenation)
-	- [52. Refer to objects by their interface](#52-refer-to-objects-by-their-interface)
-	- [53. Prefer interfaces to reflection](#53-prefer-interfaces-to-reflection)
-	- [54. Use native methods judiciously](#54-use-native-methods-judiciously)
-	- [55. Optimize judiciously](#55-optimize-judiciously)
-	- [56. Adhere to generally accepted naming conventions](#56-adhere-to-generally-accepted-naming-conventions)
-- [9. EXCEPTIONS](#9-exceptions)
-	- [57. Use exceptions only for exceptional conditions](#57-use-exceptions-only-for-exceptional-conditions)
-	- [58. Use checked exceptions for recoverable conditions and runtime exceptions for programming errors](#58-use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors)
-	- [59. Avoid unnecessary use of checked exceptions](#59-avoid-unnecessary-use-of-checked-exceptions)
-	- [60. Favor the use of standard exceptions](#60-favor-the-use-of-standard-exceptions)
-	- [61. Throw exceptions appropriate to the abstraction](#61-throw-exceptions-appropriate-to-the-abstraction)
-	- [62. Document all exceptions thrown by each method](#62-document-all-exceptions-thrown-by-each-method)
-	- [63. Include failure-capture information in detail messages](#63-include-failure-capture-information-in-detail-messages)
-	- [64. Strive for failure atomicity](#64-strive-for-failure-atomicity)
-	- [65. Don't ignore exceptions](#65-dont-ignore-exceptions)
-- [10. CONCURRENCY](#10-concurrency)
-	- [66. Synchronize access to shared mutable data](#66-synchronize-access-to-shared-mutable-data)
-	- [67. Avoid excessive synchronization](#67-avoid-excessive-synchronization)
-	- [68. Prefer executors and tasks to threads](#68-prefer-executors-and-tasks-to-threads)
-	- [69. Prefer concurrency utilities to _wait_ and _notify_](#69-prefer-concurrency-utilities-to-wait-and-notify)
-	- [70. Document thread safety](#70-document-thread-safety)
-	- [71. Use lazy initialization judiciously](#71-use-lazy-initialization-judiciously)
-	- [72. Don't depend on thread scheduler](#72-dont-depend-on-thread-scheduler)
-	- [73. Avoid thread groups](#73-avoid-thread-groups)
-- [11. SERIALIZATION](#11-serialization)
-	- [74. Implement _Serializable_ judiciously](#74-implement-serializable-judiciously)
-	- [75. Consider using a custom serialized form](#75-consider-using-a-custom-serialized-form)
-	- [76. Write _readObject_ methods defensively](#76-write-readobject-methods-defensively)
-	- [77. For instance control, prefer _enum_ types to _readResolve_](#77-for-instance-control-prefer-enum-types-to-readresolve)
-	- [78. Consider serialization proxies instead of serialized instances](#78-consider-serialization-proxies-instead-of-serialized-instances)
-
-
+- [2 CREATING AND DESTROYING OBJECTS](#2-creating-and-destroying-objects)
+    - [Item 1: Consider static factory methods instead of constructors](#1-use-static-factory-methods-instead-of-constructors)
+    - [Item 2: Consider a builder when faced with many constructor parameters](#2-use-builders-when-faced-with-many-constructors)
+    - [Item 3: Enforce the singleton property with a private constructor or an enum type](#3-enforce-the-singleton-property-with-a-private-constructor-or-an-enum-type)
+    - [Item 4: Enforce noninstantiability with a private constructor](#4-enforce-noninstantiability-with-a-private-constructor)
+    - [Item 5: Prefer dependency injection to hardwiring resources](#5-prefer-dependency-injection-to-hardwiring-resources)
+    - [Item 6: Avoid creating unnecessary objects](#6-avoid-creating-objects)
+    - [Item 7: Eliminate obsolete object references](#7-eliminate-obsolete-object-references)
+    - [Item 8: Avoid finalizers and cleaners](#8-avoid-finalizers)
+    - [Item 9: Prefer try-with-resources to try-finally](#9-prefer-try-with-resources-to-try-finally)
+- [3 METHODS COMMON TO ALL OBJECTS](#3-methods-common-to-all-objects)
+    - [Item 10: Obey the general contract when overriding equals](#10-obey-the-general-contract-when-overriding-equals)
+    - [Item 11: Always override hashCode when you override equals](#11-always-override-_hashcode_-when-you-override-equals)
+    - [Item 12: Always override toString](#12-always-override-_tostring_)
+    - [Item 13: Override clone judiciously](#13-override-_clone_-judiciously)
+    - [Item 14: Consider implementing Comparable](#14-consider-implementing-_comparable_)
+- [4 CLASSES AND INTERFACES](#4-classes-and-interfaces)
+    - [Item 15: Minimize the accessibility of classes and members](#15-minimize-the-accesibility-of-classes-and-members)
+    - [Item 16: In public classes, use accessor methods, not public fields](#16-in-public-classes-use-accessor-methods-not-public-fields)
+    - [Item 17: Minimize mutability](#17-minimize-mutability)
+    - [Item 18: Favor composition over inheritance](#18-favor-composition-over-inheritance)
+    - [Item 19: Design and document for inheritance or else prohibit it](#19-design-and-document-for-inheritance-or-else-prohibit-it)
+    - [Item 20: Prefer interfaces to abstract classes](#20-prefer-interfaces-to-abstract-classes)
+    - [Item 21: Design interfaces for posterity](#21-design-interface-for-posterity)
+    - [Item 22: Use interfaces only to define types](#22-use-interfaces-only-to-define-types)
+    - [Item 23: Prefer class hierarchies to tagged classes](#23-prefer-class-hierarchies-to-tagged-classes)
+    - [Item 24: Favor static member classes over nonstatic](#24-favor-static-member-classes-over-nonstatic)
+    - [Item 25: Limit source files to a single top-level class](#25-limit-source-files-to-a-single-top-level-class)
+- [5 GENERICS](#5-generics)
+    - [Item 26: Don’t use raw types](#26-dont-use-raw-types-in-new-code)
+    - [Item 27: Eliminate unchecked warnings](#27-eliminate-unchecked-warnings)
+    - [Item 28: Prefer lists to arrays](#28-prefer-lists-to-arrays)
+    - [Item 29: Favor generic types](#29-favor-generic-types)
+    - [Item 30: Favor generic methods](#30-favor-generic-methods)
+    - [Item 31: Use bounded wildcards to increase API flexibility](#31-use-bounded-wildcards-to-increase-api-flexibility)
+    - [Item 32: Combine generics and varargs judiciously](#32-combine-generics-and-varargs-judiciously)
+    - [Item 32: Combine generics and varargs judiciously](#32-combine-generics-and-varargs-judiciously)
+    - [Item 33: Consider typesafe heterogeneous containers](#33-consider-_typesafe-heterogeneous-containers_)
+- [6 ENUMS AND ANNOTATIONS](#6-enums-and-annotations)
+    - [Item 34: Use enums instead of int constants](#34-use-enums-instead-of-_int_-constants)
+    - [Item 35: Use instance fields instead of ordinals](#35-use-instance-fields-instead-of-ordinals)
+    - [Item 36: Use EnumSet instead of bit fields](#36-use-enumset-instead-of-bit-fields)
+    - [Item 37: Use EnumMap instead of ordinal indexing](#37-use-enummap-instead-of-ordinal-indexing)
+    - [Item 38: Emulate extensible enums with interfaces](#38-emulate-extensible-enums-with-interfaces)
+    - [Item 39: Prefer annotations to naming patterns](#39-prefer-annotations-to-naming-patterns)
+    - [Item 40: Consistently use the Override annotation](#40-consistently-use-the-_override_-annotation)
+    - [Item 41: Use marker interfaces to define types](#41-use-marker-interfaces-to-define-types)
+- [7 LAMBDAS AND STREAMS](#7-lambdas-and-streams)
+    - [Item 42: Prefer lambdas to anonymous classes](#42-prefer-lambdas-to-anonymous-classes)
+    - [Item 43: Prefer method references to lambdas](#43-prefer-method-references-to-lambdas)
+    - [Item 44: Favor the use of standard functional interfaces](#44-favor-the-use-of-standard-functional)
+    - [Item 45: Use streams judiciously](#45-use-streams-judiciously)
+    - [Item 46: Prefer side-effect-free functions in streams](#46-prefer-side-effect-free-functions-of-streams)
+    - [Item 47: Prefer Collection to Stream as a return type](#47-prefer-collection-to-stream-as-return-type)
+    - [Item 48: Use caution when making streams parallel](#48-use-caution-when-making-streams-parallel)
+- [8 METHODS](#8-methods)
+    - [Item 49: Check parameters for validity](#49-check-parameters-for-validity)
+    - [Item 50: Make defensive copies when needed](#50-make-defensive-copies-when-needed)
+    - [Item 51: Design method signatures carefully](#51-design-method-signatures-carefully)
+    - [Item 52: Use overloading judiciously](#52-use-overloading-judiciously)
+    - [Item 53: Use varargs judiciously](#53-use-varargs-judiciously)
+    - [Item 54: Return empty collections or arrays, not nulls](#54-return-empty-arrays-or-collections-not-nulls)
+    - [Item 55: Return optionals judiciously](#55-return-optional-judiciously)
+    - [Item 56: Write doc comments for all exposed API elements](#56-write-_doc-comments_-for-all-exposed-api-elemnts)
+- [9 GENERAL PROGRAMMING](#9-general-programming)
+    - [Item 57: Minimize the scope of local variables](#57-minimize-the-scope-of-local-variables)
+    - [Item 58: Prefer for-each loops to traditional for loops](#58-prefer-for-each-loops-to-traditional-for-loops)
+    - [Item 59: Know and use the libraries](#59-know-and-use-libraries)
+    - [Item 60: Avoid float and double if exact answers are required](#60-avoid-float-and-double-if-exact-answer-are-required)
+    - [Item 61: Prefer primitive types to boxed primitives](#61-prefer-primitive-types-to-boxed-primitives)
+    - [Item 62: Avoid strings where other types are more appropriate](#62-avoid-strings-where-other-types-are-more-appropriate)
+    - [Item 63: Beware the performance of string concatenation](#63-beware-the-performance-of-string-concatenation)
+    - [Item 64: Refer to objects by their interfaces](#64-refer-to-objects-by-their-interface)
+    - [Item 65: Prefer interfaces to reflection](#65-prefer-interfaces-to-reflection)
+    - [Item 66: Use native methods judiciously](#66-use-native-methods-judiciously)
+    - [Item 67: Optimize judiciously](#67-optimize-judiciously)
+    - [Item 68: Adhere to generally accepted naming conventions](#68-adhere-to-generally-accepted-naming-conventions)
+- [10 EXCEPTIONS](#10-exceptions)
+    - [Item 69: Use exceptions only for exceptional conditions](#69-use-exceptions-only-for-exceptional-conditions)
+    - [Item 70: Use checked exceptions for recoverable conditions and runtime exceptions for programming errors](#70-use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors)
+    - [Item 71: Avoid unnecessary use of checked exceptions](#71-avoid-unnecessary-use-of-checked-exceptions)
+    - [Item 72: Favor the use of standard exceptions](#72-favor-the-use-of-standard-exceptions)
+    - [Item 73: Throw exceptions appropriate to the abstraction](#73-throw-exceptions-appropriate-to-the-abstraction)
+    - [Item 74: Document all exceptions thrown by each method](#74-document-all-exceptions-thrown-by-each-method)
+    - [Item 75: Include failure-capture information in detail messages](#75-include-failure-capture-information-in-detail-messages)
+    - [Item 76: Strive for failure atomicity](#76-strive-for-failure-atomicity)
+    - [Item 77: Don’t ignore exceptions](#77-dont-ignore-exceptions)
+- [11 CONCURRENCY](#11-concurrency)
+    - [Item 78: Synchronize access to shared mutable data](#78-synchronize-access-to-shared-mutable-data)
+    - [Item 79: Avoid excessive synchronization](#79-avoid-excessive-synchronization)
+    - [Item 80: Prefer executors, tasks, and streams to threads](#80-prefer-executors-tasks-and-streams-to-threads)
+    - [Item 81: Prefer concurrency utilities to wait and notify](#81-prefer-concurrency-utilities-to-_wait_-and-_notify_)
+    - [Item 82: Document thread safety](#82-document-thread-safety)
+    - [Item 83: Use lazy initialization judiciously](#83-use-lazy-initialization-judiciously)
+    - [Item 84: Don’t depend on the thread scheduler](#84-dont-depend-on-thread-scheduler)
+- [12 SERIALIZATION](#12-serialization)
+    - [Item 85: Prefer alternatives to Java serialization](#85-prefer-alternatives-to-java-serialization)
+    - [Item 86: Implement Serializable with great caution](#86-implement-serializable-with-great-caution)
+    - [Item 87: Consider using a custom serialized form](#87-consider-using-a-custom-serialized-form)
+    - [Item 88: Write readObject methods defensively](#88-write-_readobject_-methods-defensively)
+    - [Item 89: For instance control, prefer enum types to readResolve](#89-for-instance-control-prefer-_enum_-types-to-_readresolve_)
+    - [Item 90: Consider serialization proxies instead of serialized instances](#90-consider-serialization-proxies-instead-of-serialized-instances)
 
 
 # 2. CREATING AND DESTROYING OBJECTS
@@ -322,7 +332,7 @@ With dependency injection, you will be able to attach varied Lexicon to SpellChe
     }
 ```
 
-## 5. Avoid creating objects
+## 6. Avoid creating objects
 
 **REUSE IMMUTABLE OBJECTS**
 
@@ -435,7 +445,7 @@ The improved version of isRomanNumeral provides significant performance gains if
 
 Unless objects in the pool are extremely heavyweight, like a database connections.
 
-## 6. Eliminate obsolete object references
+## 7. Eliminate obsolete object references
 **_Can you spot the memory leak?_**
 
 ```java
@@ -500,7 +510,7 @@ To solve it store only _weak references_ to them, for example storing them as ke
 
 __Use a Heap Profiler from time to time to find unseen memory leaks__
 
-## 7. Avoid finalizers
+## 8. Avoid finalizers
 Finalizers are unpredictable, often dangerous and generally.
 
 **_Never do anything time-critical in a finalizer._**
@@ -3314,7 +3324,7 @@ tasks should be:
 * not implement busy-wait
 
 
-# 11. SERIALIZATION
+# 12. SERIALIZATION
 ## 85. Prefer alternatives to Java serialization
 There is no reason to use Java serialization in any new system you write.
 Never deserialize untrusted data.
