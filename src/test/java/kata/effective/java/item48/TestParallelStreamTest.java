@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 class TestParallelStreamTest {
 
-  private final static long LONG_VALUE = 10_000_000;
+  private final static long LONG_VALUE = 10_000;
 
   @Test
   void worstCase() {
