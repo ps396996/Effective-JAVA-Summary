@@ -1,5 +1,6 @@
 package kata.effective.java.item65;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -18,13 +19,15 @@ public class InterfaceToReflection {
     //Instantiate the class
     Set<String> s = null;
     try{
-      s = (Set<String>) cl.newInstance(); //  The class can be either a HashSet or a TreeSet
+      s = (Set<String>) cl.getDeclaredConstructor().newInstance(); //  The class can be either a HashSet or a TreeSet
     } catch(IllegalAccessException e){
       System.err.println("Class not accessible");
       System.exit(1);
     }catch(InstantiationException e){
       System.err.println("Class not instantiable");
       System.exit(1);
+    } catch (NoSuchMethodException | InvocationTargetException e) {
+      e.printStackTrace();
     }
 
     //Excercise the Set
