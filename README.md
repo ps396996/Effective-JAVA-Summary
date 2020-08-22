@@ -105,7 +105,7 @@ _If you are the publisher and think this repository should not be public, just w
 * Unlike constructors, they have names
 * Unlike constructors, they are not requires to create a new object each time they're invoked
 * Unlike constructors, they can return an object of any subtype of their return type
-* They reduce verbosity of creating parameterized type instances
+* They reduce verbosity of creating parameterised type instances
 
 **_DISADVANTAGES_**
 
@@ -3122,3 +3122,6 @@ Limitations, not compatible with:
 
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTUwOTk0MTY0Nl19
+-->
