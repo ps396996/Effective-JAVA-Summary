@@ -109,7 +109,7 @@ _If you are the publisher and think this repository should not be public, just w
 **_DISADVANTAGES_**
 
 * If providing only static factory methods, classes without public or protected constructors cannot be subclassed (encourage to use composition instead inheritance).
-* They are not readily distinguishable from other static methods (Some common names (each with a different pourpose) are: valueOf, of, getInstance, newInstance, getType and newType)
+* They are not readily distinguishable from other static methods (Some common names (each with a different purpose) are: valueOf, of, getInstance, newInstance, getType and newType)
 
 ```java
 
@@ -3122,5 +3122,5 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTMyNjkyODI1Ml19
+eyJoaXN0b3J5IjpbMjE4Nzc3MDQ5XX0=
 -->
