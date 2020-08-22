@@ -195,6 +195,7 @@ Builder pattern simulates named optional parameters as in ADA and Python.
 
 ```
 
+
 ## 3. Enforce the singleton property with a private constructor or an enum type
 There are different ways to create singletons:
 
@@ -3126,5 +3127,6 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1MzUzOTcwMDIsMTc4OTU5MDcwN119
+eyJoaXN0b3J5IjpbLTU5NDkwMjMwMCwtMTUzNTM5NzAwMiwxNz
+g5NTkwNzA3XX0=
 -->
