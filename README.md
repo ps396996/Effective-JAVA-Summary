@@ -146,12 +146,12 @@ Builder pattern simulates named optional parameters as in ADA and Python.
 			private int fat 			= 0;
 			private int carbohydrate 	= 0;
 			private int sodium 			= 0;
-
+			//Constructor for required parameters
 			public Builder (int servingSize, int servings) {
 				this.servingSize = servingSize;
 				this.servings = servings;
 			}
-
+			
 			public Builder calories (int val) {
 				calories = val;
 				return this;				
@@ -171,7 +171,7 @@ Builder pattern simulates named optional parameters as in ADA and Python.
 				sodium = val;
 				return this;				
 			}
-
+			// Combining all the parameters(required + optional)
 			public NutritionFacts build(){
 				return new NutritionFacts(this);
 			}
@@ -184,6 +184,7 @@ Builder pattern simulates named optional parameters as in ADA and Python.
 			fat 			= builder.fat;
 			sodium 			= builder.sodium;
 			carbohydrate		= builder.carbohydrate;
+			// 
 		}
 	}
 ```
@@ -3125,5 +3126,5 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc4OTU5MDcwN119
+eyJoaXN0b3J5IjpbMzI3ODI2NTYsMTc4OTU5MDcwN119
 -->
