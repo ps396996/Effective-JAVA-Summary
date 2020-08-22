@@ -99,7 +99,9 @@ _If you are the publisher and think this repository should not be public, just w
 
 # 2. CREATING AND DESTROYING OBJECTS
 ## 1. Use STATIC FACTORY METHODS instead of constructors
-In this we create a static method for creating the objects, instaid  
+
+In this we create a static method for creating the objects, instead of creating it by constructor 
+
 **_ADVANTAGES_**
 
 * Unlike constructors, they have names
@@ -3123,5 +3125,5 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIyODkzNDY0OV19
+eyJoaXN0b3J5IjpbMTc4OTU5MDcwN119
 -->
