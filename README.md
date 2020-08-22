@@ -194,7 +194,7 @@ Builder pattern simulates named optional parameters as in ADA and Python.
 	NutritionFacts cocaCola = new NutritionFacts.Builder(240,8).calories(100).sodium(35).carbohydrate(27).build();
 
 ```
-PS: See there pizza example
+PS: See there pizza example (later add the pizza code)
 
 ## 3. Enforce the singleton property with a private constructor or an enum type
 There are different ways to create singletons:
@@ -3127,6 +3127,6 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTcyMjYzOTA2NiwtMTUzNTM5NzAwMiwxNz
-g5NTkwNzA3XX0=
+eyJoaXN0b3J5IjpbLTk3MTcwMjI2MiwtNzIyNjM5MDY2LC0xNT
+M1Mzk3MDAyLDE3ODk1OTA3MDddfQ==
 -->
