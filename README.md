@@ -251,7 +251,7 @@ It is needed a _readResolve_ method and declare all the fields _transient_ in ad
 	}
 ```
 
-Equivalent to the public field, more concise, provides serialization machinery for free, and guarantee against multiple instantiation, even for reflection attacks and sophisticated serialization. _It is the best way to implement a singleton_.
+Equivalent to the public field, more concise, provides serialisation machinery for free, and guarantee against multiple instantiation, even for reflection attacks and sophisticated serialization. _It is the best way to implement a singleton_.
 
 ## 4. Enforce noninstantiability with a private constructor
 For classes that group static methods and static fields.  
@@ -3127,6 +3127,6 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTk3MTcwMjI2MiwtNzIyNjM5MDY2LC0xNT
-M1Mzk3MDAyLDE3ODk1OTA3MDddfQ==
+eyJoaXN0b3J5IjpbLTEyMzY0NTk3MjcsLTk3MTcwMjI2MiwtNz
+IyNjM5MDY2LC0xNTM1Mzk3MDAyLDE3ODk1OTA3MDddfQ==
 -->
