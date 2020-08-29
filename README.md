@@ -490,7 +490,7 @@ A class has a notion of _logical equality_ that differs from mere object identit
 * Consistent: *x.equals(y)==x.equals(y)==x.equals(y)==...*
 * Non-nullity: *x.equals(null)->false*
 
-
+**java.util.Date's equal implementation for Timestamp violate symmetry
 
 **_The Recipe_**
 
@@ -3129,7 +3129,7 @@ Limitations, not compatible with:
 * classes that are extendable by their clients ([Item 17](#17-design-and-document-for-inheritance-or-else-prohibit-it))
 * some classes whose object graphs contain circularities
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMjI3MjMxMTUsLTEyMzY0NTk3MjcsLT
-k3MTcwMjI2MiwtNzIyNjM5MDY2LC0xNTM1Mzk3MDAyLDE3ODk1
-OTA3MDddfQ==
+eyJoaXN0b3J5IjpbLTc4NjEwNTIwNCwtMTIzNjQ1OTcyNywtOT
+cxNzAyMjYyLC03MjI2MzkwNjYsLTE1MzUzOTcwMDIsMTc4OTU5
+MDcwN119
 -->
