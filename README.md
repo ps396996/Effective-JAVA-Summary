@@ -1020,7 +1020,7 @@ Skeletal implementations are designed for inheritance so follow [Item 17](#17-de
 _simple implementation_ is like a skeletal implementation in that it implements the simplest possible working implementation.
 
 Cons: It is far easier to evolve an abstract class than an interface. Once an interface is released and widely implemented, it is almost impossible to change.
-
+![Nice Tutorial for Skeletal implementation](https://dzone.com/articles/favour-skeletal-interface-in-java)
 ## 19. Use interfaces only to define types
 When a class implements an interface, the interface serves as a _type_ that can be used to refer to instances of the class.
 
