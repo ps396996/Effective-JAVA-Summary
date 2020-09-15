@@ -11,6 +11,7 @@ _If you are the publisher and think this repository should not be public, just w
 	- [2. Use BUILDERS when faced with many constructors](#2-use-builders-when-faced-with-many-constructors)
 	- [3. Enforce the singleton property with a private constructor or an enum type](#3-enforce-the-singleton-property-with-a-private-constructor-or-an-enum-type)
 	- [4. Enforce noninstantiability with a private constructor](#4-enforce-noninstantiability-with-a-private-constructor)
+	- [5.Prefer dependency injection to hardwiring resources](#5-pefer-dependency-injection-to-hardwiring-resources)
 	- [5. Avoid creating objects](#5-avoid-creating-objects)
 	- [6. Eliminate obsolete object references](#6-eliminate-obsolete-object-references)
 	- [7. Avoid finalizers](#7-avoid-finalizers)
@@ -275,7 +276,20 @@ Used for example to:
 		...
 	}
 ```
+## 5. Pefer dependency injection to hardwiring resources
+A common mistake is the use of a singleton or a static utility class for a class that depends on underlying resources.
+The use of dependency injection gives us more flexibility, testability and reusability
 
+Example : 
+```java
+public class SpellChecker {
+	private final Lexicon dictionary;
+	public SpellChecker (Lexicon dictionary) {
+		this.dictionary = Objects.requireNonNull(dictionary);
+	}
+	...
+}
+```
 ## 5. Avoid creating objects
 
 **REUSE IMMUTABLE OBJECTS**
@@ -467,7 +481,24 @@ Explicit termination methods are typically used in combination with the _try-fin
 * Use in native peers. Garbage collector doesn't know about this objects.
 
 In this cases always remember to invoke super.finalize.
+## 9. Prefer _try-with-resources_ to _try-finally_
 
+When using try-finally blocks exceptions can occur in both the try and finally block. It results in non clear stacktraces.
+Always use try with resources instead of try-finally. It's clearer and the exceptions that can occured will be clearer.
+
+Example :
+```java
+static void copy(String src, String dst) throws IOException {
+	try (InputStream in = new InputStream(src); 
+		OutputStream out = new FileOutputStream(dst)) {
+		byte[] buf = new byte[BUFFER_SIZE];
+		int n;
+		while ((n = in.read(buf)) >= 0) {
+			out.write(buf, 0, n);
+		}
+	}
+}
+```
 # 3. METHODS COMMON TO ALL OBJECTS
 ## 8. Obey the general contract when overriding *equals*
 
@@ -1021,6 +1052,13 @@ _simple implementation_ is like a skeletal implementation in that it implements 
 
 Cons: It is far easier to evolve an abstract class than an interface. Once an interface is released and widely implemented, it is almost impossible to change.
 [Nice Tutorial for Skeletal implementation](https://dzone.com/articles/favour-skeletal-interface-in-java)
+
+## 21. Design interfaces for posterity
+
+With Java 8, it's now possible to add new methods in interfaces without breaking old implemetations thanks to default methods.
+Nonetheless, it needs to be done carefully since it can still break old implementations that will fail at runtime.
+
+
 ## 19. Use interfaces only to define types
 When a class implements an interface, the interface serves as a _type_ that can be used to refer to instances of the class.
 
@@ -1152,7 +1190,7 @@ A tagged class is just a palid imitation of a class hierarchy.
 		}
 	}
 ```
-
+<!--
 ## 21. Use function objects to represent strategies
 Strategies are facilities that allow programs to store and transmit the ability to invoke a particular function. Similar to _function pointers_, _delegates_ or _lambda expression_.
 
@@ -1224,7 +1262,7 @@ A host class can export the a public static field or factory, whose type is the 
 		...
 	}
 ```
-
+-->
 ## 22. Favor static member classes over nonstatic
 4 types of nested classes.
 
@@ -1246,6 +1284,11 @@ Common use of static member class is a public helper in conjuctions with its out
 **Local** class from the official docs: Use it if you need to create more than one instance of a class, access its constructor, or introduce a new, named type (because, for example, you need to invoke additional methods later).
 
 Anonymous class, from the official docs: Use it if you need to declare fields or additional methods.
+
+## 25: Limit source files to a single top-level class
+
+Even though it's possible to write multiple top level classes in a single file, don't !
+Doing so can result in multiple definition for a single class at compile time.
 
 
 # 5. GENERICS
@@ -1551,6 +1594,16 @@ Type inference in generics
 Comparable and Comparators are always consumers. Use `Comparable<? super T>` and `Comparator<? super T>`
 
 If a type parameter appears only once in a method declaration, replace it with a wildcard.
+
+## 32. Combine generics and varargs judiciously
+
+Even thow it's not legal to declare generic arrays explicitly, it's still possible to use varargs with generics.
+This inconsistency has been a choice because of its usefulness (Exemple : Arrays.asList(T... a)).
+This can, obviously, create problems regarding type safety. 
+To make a generic varargs method safe, be sure :
+ - it doesn't store anything in the varargs array
+ - it doesn't make the array visible to untrusted code
+When those two conditions are met, use the annotation @SafeVarargs to remove warnings that you took care of and show users of your methods that it is typesafe.
 
 ## 29. Consider _typesafe heterogeneous containers_
 A container for accessing a heterogeneous list of types in a typesafe way.
@@ -1920,6 +1973,74 @@ When your class implements `java.io.Serializable` interface it becomes Serializa
 * They can be targeted more precisely than marker annotations.
 * It's possible to add more information to an annotation type after it is already in use.
 
+
+# 7. Lambdas and streams
+
+## 42. Prefer lambdas to anonymous classes
+
+Lambdas are the best way to represent function objects. As a rule of thumb, lambdas needs to be short to be readable. Three lines seems to be a reasonnable limit.
+Also the lambdas needs to be self-explanatory since it lacks name or documentation. Always think in terms of readability.
+
+## 43. Prefer method references to lambdas
+
+Most of the time, method references are shorter and then clearer. The more arguments the lambdas has, the more the method reference will be clearer.
+When a lambda is too long, you can refactor it to a method (which will give a name and documentation) and use it as a method reference.
+
+They are five kinds of method references : 
+
+|Method ref type|Example|Lambda equivalent|
+|--|--|--|
+|Static|Integer::parseInt|str -> Integer.parseInt(str)|
+|Bound|Instant.now()::isAfter|Instant then = Instant.now(); t->then.isAfter(t)|
+|Unbound|String::toLowerCase|str -> str.toLowerCase()|
+|Class Constructor|TreeMap<K,V>::new|() -> new TreeMap<K,V>|
+|Array Constructor|int[]::new|len -> new int[len]|
+
+## 44. Favor the use of standard functional interfaces
+
+java.util.Function provides a lot of functional interfaces. If one of those does the job, you should use it
+
+Here are more common interfaces : 
+
+|Interface|Function signature|Example|
+|--|--|--|
+|UnaryOperator<T>|T apply(T t)|String::toLowerCase|
+|BinaryOperator<T>|T apply(T t1, T t2)|BigInteger::add|
+|Predicate<T>|boolean test(T t)|Collection::isEmpty|
+|Function<T,R>|R apply(T t)|Arrays::asList|
+|Supplier<T>|T get()|Instant::now|
+|Consumer<T>|void accept(T t)|System.out::println|
+
+When creating your own functional interfaces, always annotate with @FunctionalInterfaces so that it won't compile unless it has exactly one abstract method.
+
+## 45. Use streams judiciously
+
+Carefully name parameters of lambda in order to make your stream pipelines readable. Also, use helper methods for the same purpose.
+
+Streams should mostly be used for tasks like : 
+ - Transform a sequence of elements
+ - Filter a sequence of elements
+ - Combine sequences of elements 
+ - Accumulate a sequence of elements inside a collection (perhaps grouping them)
+ - Search for en element inside of a sequence
+
+## 46. Prefer _side-effect-free_ functions in streams
+ 
+Programming with stream pipelines should be side effect free. 
+The terminal forEach method should only be used to report the result of a computation not to perform the computation itself.
+In order to use  streams properly, you need to know about collectors. The most importants are toList, toSet, toMap, groupingBy and joining.
+
+## 47. Prefer Collection to Stream as a return type
+
+The collection interface is a subtype of Iterable and has a stream method. It provides both iteration and stream access.
+If the collection in too big memory wise, return what seems more natural (stream or iterable)
+
+## 48. Use caution when making streams parallel
+
+Parallelizing a pipeline is unlikely to increase its performance if it comes from a Stream.iterate or the limit method is used.
+As a rule of thumb, parallelization should be used on ArrayList, HashMap, HashSet, ConcurrentHashMap, arrays, int ranges and double ranges. Those structure can be divided in any desired subranged and so on, easy to work among parrallel threads.
+
+
 # 7. METHODS
 ## 38. Check parameters for validity
 Check parameters before execution as soon as possible.
@@ -2182,10 +2303,28 @@ Don't forget to documment:
 
 # 8. GENERAL PROGRAMMING
 ## 45. Minimize the scope of local variables.
-Declare local variable where it is first used.  
-Most local variable declaration should contain an initializer.  
-Prefer for loops to while loops.  
-Keep methods small and focused.   
+To limit the scope of your variables, you should : 
+ - declare them when first used
+ - use for loops instead of while when doable
+ - keep your methods small and focused
+ - Most local variable declaration should contain an initializer.  
+```java
+//Idiom for iterating over a collection 
+for (Element e : c) {
+	//Do something with e
+}
+
+//Idiom when you need the iterator
+for (Iterator<Element> i = c.iterator() ; i.hasNext() ; ) {
+	Element e = i.next();
+	//Do something with e
+}
+
+//Idiom when the condition of for is expensive
+for (int i = 0, n = expensiveComputation() ; i < n ; i++) {
+	//Do something with i
+}
+```  
 
 ## 46. Prefer for-each loops to traditional for loops.
 ```java
